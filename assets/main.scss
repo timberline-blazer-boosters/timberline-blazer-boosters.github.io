@@ -62,15 +62,15 @@ img {
 }
 
 .cta-button {
-  display: inline-block;
+  display: block;
   max-width: 120px;
+  margin: 0.5rem auto 1rem;
 }
 
 .cta-button img {
   display: block;
   width: 100%;
   height: auto;
-  margin: 0.5rem 0 1rem;
 }
 
 .calendar-embed {
