@@ -1,5 +1,4 @@
+--- 
+layout: home 
+title: Home 
 ---
-layout: default
-title: Home
----
-# Timberline Blazer Boosters
