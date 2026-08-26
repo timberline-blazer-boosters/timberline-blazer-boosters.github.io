@@ -69,8 +69,22 @@ img {
 
 .cta-button-wide {
   display: block;
-  max-width: 280px;
+  max-width: 160px;
   margin: 0.5rem auto 1rem;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1.25rem 0;
+}
+
+.cta-row .cta-button,
+.cta-row .cta-button-wide {
+  margin: 0;
 }
 
 .cta-button img,
@@ -118,7 +132,7 @@ img {
   }
 
   .cta-button-wide {
-    max-width: 220px;
+    max-width: 130px;
   }
 
   .calendar-embed iframe {
