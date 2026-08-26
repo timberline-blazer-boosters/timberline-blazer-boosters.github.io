@@ -1,5 +1,13 @@
- title: Timberline Blazers Booster Club 
- description: Supporting Timberline High School athletics and activities 
- remote_theme: pages-themes/modernist@v0.2.0
+title: Timberline Blazers Booster Club
+description: Supporting Timberline High School athletics and activities
+theme: minima
+url: https://timberline-blazer-boosters.github.io
+
+header_pages:
+  - events.html
+  - scholarships/index.html
+  - donate.html
+
 plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
+  - jekyll-feed
+  - jekyll-seo-tag
