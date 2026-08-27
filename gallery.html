@@ -1,234 +1,117 @@
 ---
-layout: null
+layout: page
 title: Gallery
 permalink: /gallery/
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery | {{ site.title | escape }}</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
 
-    body {
-      height: 100vh;
-      overflow: hidden;
-      background-color: #000;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+<p id="gallery-status">Loading photos…</p>
 
-    .bg-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      transition: opacity 1.5s ease-in-out;
-      opacity: 0;
-    }
+<div id="gallery-slideshow" class="gallery-slideshow" hidden>
+  <img id="gallery-layer-1" class="gallery-slide" alt="Timberline Blazers gallery photo">
+  <img id="gallery-layer-2" class="gallery-slide" alt="">
+</div>
 
-    .bg-layer.active {
-      opacity: 1;
-    }
+<script>
+  const PHOTOPRISM_URL = "https://photos.tlblazers.com";
+  const SHARE_TOKEN = "fu9r7cys9c";
+  const ROTATION_INTERVAL = 6000;
 
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.28);
-      z-index: 1;
-    }
+  let photoUrls = [];
+  let currentIndex = 0;
+  let activeLayer = 1;
 
-    .site-bar {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 1rem 1.5rem;
-    }
+  const layer1 = document.getElementById("gallery-layer-1");
+  const layer2 = document.getElementById("gallery-layer-2");
+  const statusEl = document.getElementById("gallery-status");
+  const slideshowEl = document.getElementById("gallery-slideshow");
 
-    .site-bar a {
-      color: #fff;
-      text-decoration: none;
-    }
+  function photoHash(photo) {
+    if (photo.Hash) return photo.Hash;
+    if (photo.Files && photo.Files[0] && photo.Files[0].Hash) return photo.Files[0].Hash;
+    return "";
+  }
 
-    .site-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
+  async function fetchAlbumPhotos() {
+    try {
+      const sessionRes = await fetch(PHOTOPRISM_URL + "/api/v1/session", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token: SHARE_TOKEN })
+      });
 
-    .site-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      font-size: 0.95rem;
-    }
-
-    .site-nav a:hover {
-      text-decoration: underline;
-    }
-
-    .content {
-      position: relative;
-      z-index: 2;
-      color: white;
-      text-align: center;
-      top: 42%;
-      transform: translateY(-50%);
-      padding: 0 1.5rem;
-      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
-    }
-
-    .content h1 {
-      font-size: clamp(1.6rem, 4vw, 2.6rem);
-      font-weight: 600;
-    }
-
-    .status {
-      margin-top: 0.75rem;
-      font-size: 1rem;
-      opacity: 0.9;
-    }
-
-    .status a {
-      color: #fff;
-    }
-  </style>
-</head>
-<body>
-  <div id="bg1" class="bg-layer"></div>
-  <div id="bg2" class="bg-layer"></div>
-  <div class="overlay"></div>
-
-  <header class="site-bar">
-    <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
-    <nav class="site-nav">
-      <a href="{{ '/events/' | relative_url }}">Events</a>
-      <a href="{{ '/scholarships/' | relative_url }}">Scholarships &amp; Grants</a>
-      <a href="{{ '/donate/' | relative_url }}">Donate</a>
-      <a href="{{ '/gallery/' | relative_url }}">Gallery</a>
-    </nav>
-  </header>
-
-  <div class="content">
-    <h1>Photo Gallery</h1>
-    <p id="status" class="status">Loading photos…</p>
-  </div>
-
-  <script>
-    const PHOTOPRISM_URL = "https://photos.tlblazers.com";
-    const SHARE_TOKEN = "fu9r7cys9c";
-    const ROTATION_INTERVAL = 6000;
-
-    let photoUrls = [];
-    let currentIndex = 0;
-    let activeLayer = 1;
-
-    const layer1 = document.getElementById("bg1");
-    const layer2 = document.getElementById("bg2");
-    const statusEl = document.getElementById("status");
-
-    function photoHash(photo) {
-      if (photo.Hash) return photo.Hash;
-      if (photo.Files && photo.Files[0] && photo.Files[0].Hash) return photo.Files[0].Hash;
-      return "";
-    }
-
-    async function fetchAlbumPhotos() {
-      try {
-        const sessionRes = await fetch(PHOTOPRISM_URL + "/api/v1/session", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ token: SHARE_TOKEN })
-        });
-
-        if (!sessionRes.ok) {
-          throw new Error("Session error: " + sessionRes.status);
-        }
-
-        const session = await sessionRes.json();
-        const sessionId = session.id;
-        const previewToken = (session.config && session.config.previewToken) || "public";
-        const albumUid = session.data && session.data.shares && session.data.shares[0];
-
-        const photosUrl = new URL("/api/v1/photos", PHOTOPRISM_URL);
-        photosUrl.searchParams.set("count", "100");
-        photosUrl.searchParams.set("merged", "true");
-        photosUrl.searchParams.set("order", "newest");
-        if (albumUid) {
-          photosUrl.searchParams.set("album", albumUid);
-        }
-
-        const photosRes = await fetch(photosUrl.toString(), {
-          headers: {
-            Accept: "application/json",
-            "X-Session-ID": sessionId
-          }
-        });
-
-        if (!photosRes.ok) {
-          throw new Error("Photos error: " + photosRes.status);
-        }
-
-        const data = await photosRes.json();
-        photoUrls = data
-          .map(photoHash)
-          .filter(Boolean)
-          .map(function (hash) {
-            return PHOTOPRISM_URL + "/api/v1/t/" + hash + "/" + previewToken + "/fit_2048";
-          });
-
-        if (photoUrls.length > 0) {
-          statusEl.textContent = "";
-          startGallery();
-        } else {
-          statusEl.innerHTML = 'No photos found. <a href="' + PHOTOPRISM_URL + "/s/" + SHARE_TOKEN + '">Open the album</a>.';
-        }
-      } catch (error) {
-        console.error("Failed to load photos from PhotoPrism:", error);
-        statusEl.innerHTML = 'Could not load the gallery here. <a href="' + PHOTOPRISM_URL + "/s/" + SHARE_TOKEN + '">View photos on PhotoPrism</a>.';
+      if (!sessionRes.ok) {
+        throw new Error("Session error: " + sessionRes.status);
       }
+
+      const session = await sessionRes.json();
+      const sessionId = session.id;
+      const previewToken = (session.config && session.config.previewToken) || "public";
+      const albumUid = session.data && session.data.shares && session.data.shares[0];
+
+      const photosUrl = new URL("/api/v1/photos", PHOTOPRISM_URL);
+      photosUrl.searchParams.set("count", "100");
+      photosUrl.searchParams.set("merged", "true");
+      photosUrl.searchParams.set("order", "newest");
+      if (albumUid) {
+        photosUrl.searchParams.set("album", albumUid);
+      }
+
+      const photosRes = await fetch(photosUrl.toString(), {
+        headers: {
+          Accept: "application/json",
+          "X-Session-ID": sessionId
+        }
+      });
+
+      if (!photosRes.ok) {
+        throw new Error("Photos error: " + photosRes.status);
+      }
+
+      const data = await photosRes.json();
+      photoUrls = data
+        .map(photoHash)
+        .filter(Boolean)
+        .map(function (hash) {
+          return PHOTOPRISM_URL + "/api/v1/t/" + hash + "/" + previewToken + "/fit_2048";
+        });
+
+      if (photoUrls.length > 0) {
+        statusEl.hidden = true;
+        slideshowEl.hidden = false;
+        startGallery();
+      } else {
+        statusEl.innerHTML = 'No photos found. <a href="' + PHOTOPRISM_URL + "/s/" + SHARE_TOKEN + '">Open the album</a>.';
+      }
+    } catch (error) {
+      console.error("Failed to load photos from PhotoPrism:", error);
+      statusEl.innerHTML = 'Could not load the gallery here. <a href="' + PHOTOPRISM_URL + "/s/" + SHARE_TOKEN + '">View photos on PhotoPrism</a>.';
     }
+  }
 
-    function updateBackground() {
-      const nextUrl = photoUrls[currentIndex];
-      const currentLayer = activeLayer === 1 ? layer1 : layer2;
-      const nextLayer = activeLayer === 1 ? layer2 : layer1;
+  function updateSlide() {
+    const nextUrl = photoUrls[currentIndex];
+    const currentLayer = activeLayer === 1 ? layer1 : layer2;
+    const nextLayer = activeLayer === 1 ? layer2 : layer1;
 
-      const img = new Image();
-      img.src = nextUrl;
-      img.onload = function () {
-        nextLayer.style.backgroundImage = "url('" + nextUrl + "')";
-        nextLayer.classList.add("active");
-        currentLayer.classList.remove("active");
+    const img = new Image();
+    img.src = nextUrl;
+    img.onload = function () {
+      nextLayer.src = nextUrl;
+      nextLayer.classList.add("active");
+      currentLayer.classList.remove("active");
 
-        activeLayer = activeLayer === 1 ? 2 : 1;
-        currentIndex = (currentIndex + 1) % photoUrls.length;
-      };
-    }
+      activeLayer = activeLayer === 1 ? 2 : 1;
+      currentIndex = (currentIndex + 1) % photoUrls.length;
+    };
+  }
 
-    function startGallery() {
-      updateBackground();
-      setInterval(updateBackground, ROTATION_INTERVAL);
-    }
+  function startGallery() {
+    updateSlide();
+    setInterval(updateSlide, ROTATION_INTERVAL);
+  }
 
-    fetchAlbumPhotos();
-  </script>
-</body>
-</html>
+  fetchAlbumPhotos();
+</script>
