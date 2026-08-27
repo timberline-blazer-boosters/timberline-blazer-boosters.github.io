@@ -122,6 +122,12 @@ permalink: /gallery/
     const img = new Image();
     img.src = nextUrl;
     img.onload = function () {
+      if (img.naturalHeight > img.naturalWidth) {
+        slideshowEl.classList.add("is-portrait");
+      } else {
+        slideshowEl.classList.remove("is-portrait");
+      }
+
       nextLayer.src = nextUrl;
       nextLayer.classList.add("active");
       currentLayer.classList.remove("active");
