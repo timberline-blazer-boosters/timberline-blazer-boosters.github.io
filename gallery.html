@@ -9,6 +9,8 @@ permalink: /gallery/
 <div id="gallery-slideshow" class="gallery-slideshow" hidden>
   <img id="gallery-layer-1" class="gallery-slide" alt="Timberline Blazers gallery photo">
   <img id="gallery-layer-2" class="gallery-slide" alt="">
+  <button type="button" class="gallery-nav gallery-nav-prev" id="gallery-prev" aria-label="Previous photo">‹</button>
+  <button type="button" class="gallery-nav gallery-nav-next" id="gallery-next" aria-label="Next photo">›</button>
 </div>
 
 <script>
@@ -19,11 +21,14 @@ permalink: /gallery/
   let photoUrls = [];
   let currentIndex = 0;
   let activeLayer = 1;
+  let rotateTimer = null;
 
   const layer1 = document.getElementById("gallery-layer-1");
   const layer2 = document.getElementById("gallery-layer-2");
   const statusEl = document.getElementById("gallery-status");
   const slideshowEl = document.getElementById("gallery-slideshow");
+  const prevBtn = document.getElementById("gallery-prev");
+  const nextBtn = document.getElementById("gallery-next");
 
   function photoHash(photo) {
     if (photo.Hash) return photo.Hash;
@@ -79,9 +84,25 @@ permalink: /gallery/
         });
 
       if (photoUrls.length > 0) {
-        statusEl.hidden = true;
-        slideshowEl.hidden = false;
-        startGallery();
+        showSlide(0, true);
+        prevBtn.addEventListener("click", function () {
+          showSlide(currentIndex - 1);
+          startAutoplay();
+        });
+        nextBtn.addEventListener("click", function () {
+          showSlide(currentIndex + 1);
+          startAutoplay();
+        });
+        document.addEventListener("keydown", function (event) {
+          if (slideshowEl.hidden) return;
+          if (event.key === "ArrowLeft") {
+            showSlide(currentIndex - 1);
+            startAutoplay();
+          } else if (event.key === "ArrowRight") {
+            showSlide(currentIndex + 1);
+            startAutoplay();
+          }
+        });
       } else {
         statusEl.innerHTML = 'No photos found. <a href="' + PHOTOPRISM_URL + "/s/" + SHARE_TOKEN + '">Open the album</a>.';
       }
@@ -91,7 +112,9 @@ permalink: /gallery/
     }
   }
 
-  function updateSlide() {
+  function showSlide(index, reveal) {
+    if (!photoUrls.length) return;
+    currentIndex = (index + photoUrls.length) % photoUrls.length;
     const nextUrl = photoUrls[currentIndex];
     const currentLayer = activeLayer === 1 ? layer1 : layer2;
     const nextLayer = activeLayer === 1 ? layer2 : layer1;
@@ -102,15 +125,23 @@ permalink: /gallery/
       nextLayer.src = nextUrl;
       nextLayer.classList.add("active");
       currentLayer.classList.remove("active");
-
       activeLayer = activeLayer === 1 ? 2 : 1;
-      currentIndex = (currentIndex + 1) % photoUrls.length;
+
+      if (reveal) {
+        statusEl.hidden = true;
+        slideshowEl.hidden = false;
+        startAutoplay();
+      }
     };
   }
 
-  function startGallery() {
-    updateSlide();
-    setInterval(updateSlide, ROTATION_INTERVAL);
+  function startAutoplay() {
+    if (rotateTimer) {
+      clearInterval(rotateTimer);
+    }
+    rotateTimer = setInterval(function () {
+      showSlide(currentIndex + 1);
+    }, ROTATION_INTERVAL);
   }
 
   fetchAlbumPhotos();
