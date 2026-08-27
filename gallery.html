@@ -37,7 +37,8 @@ permalink: /gallery/
   }
 
   function isPortraitPhoto(photo, img) {
-    if (photo && photo.Portrait === true) return true;
+    if (img && img.naturalHeight > img.naturalWidth) return true;
+    if (photo && photo.Portrait) return true;
 
     const file = photo && photo.Files && photo.Files[0] ? photo.Files[0] : photo;
     const orientation = (file && file.Orientation) || (photo && photo.Orientation) || 1;
@@ -46,14 +47,10 @@ permalink: /gallery/
     const height = (file && file.Height) || (photo && photo.Height) || 0;
 
     if (width && height) {
-      return rotated ? width > height : height > width;
+      if (rotated ? width > height : height > width) return true;
     }
 
     if (file && file.AspectRatio && file.AspectRatio < 1) return true;
-
-    if (img && img.naturalWidth && img.naturalHeight) {
-      return img.naturalHeight > img.naturalWidth;
-    }
 
     return false;
   }

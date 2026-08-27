@@ -119,13 +119,18 @@ img {
 }
 
 .gallery-slideshow.is-portrait {
-  max-width: 28rem;
   margin-left: auto;
   margin-right: auto;
 }
 
 .gallery-slideshow.is-portrait::before {
   padding-top: 150%;
+}
+
+@media screen and (min-width: 801px) {
+  .gallery-slideshow.is-portrait {
+    width: 44.444%;
+  }
 }
 
 .gallery-slide {
@@ -141,6 +146,7 @@ img {
   max-height: none;
   object-fit: cover;
   object-position: center;
+  image-orientation: from-image;
   opacity: 0;
   transition: opacity 1.5s ease-in-out;
 }
