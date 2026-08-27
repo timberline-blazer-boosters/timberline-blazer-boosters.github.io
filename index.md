@@ -1,8 +1,7 @@
 ---
 layout: home
+title: About the Timberline Blazers Booster Club
 ---
-
-## About the Timberline Blazers Booster Club
 
 The Timberline Booster Club is dedicated to supporting our students, athletes, and school programs. Our mission is to enhance the high school experience through fundraising, volunteer efforts, and community engagement — making school activities more accessible and enjoyable for everyone.
 
