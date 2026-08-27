@@ -18,7 +18,7 @@ permalink: /gallery/
   const SHARE_TOKEN = "fu9r7cys9c";
   const ROTATION_INTERVAL = 6000;
 
-  let photoUrls = [];
+  let photos = [];
   let currentIndex = 0;
   let activeLayer = 1;
   let rotateTimer = null;
@@ -34,6 +34,32 @@ permalink: /gallery/
     if (photo.Hash) return photo.Hash;
     if (photo.Files && photo.Files[0] && photo.Files[0].Hash) return photo.Files[0].Hash;
     return "";
+  }
+
+  function isPortraitPhoto(photo, img) {
+    if (photo && photo.Portrait === true) return true;
+
+    const file = photo && photo.Files && photo.Files[0] ? photo.Files[0] : photo;
+    const orientation = (file && file.Orientation) || (photo && photo.Orientation) || 1;
+    const rotated = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8;
+    const width = (file && file.Width) || (photo && photo.Width) || 0;
+    const height = (file && file.Height) || (photo && photo.Height) || 0;
+
+    if (width && height) {
+      return rotated ? width > height : height > width;
+    }
+
+    if (file && file.AspectRatio && file.AspectRatio < 1) return true;
+
+    if (img && img.naturalWidth && img.naturalHeight) {
+      return img.naturalHeight > img.naturalWidth;
+    }
+
+    return false;
+  }
+
+  function setFrame(photo, img) {
+    slideshowEl.classList.toggle("is-portrait", isPortraitPhoto(photo, img));
   }
 
   async function fetchAlbumPhotos() {
@@ -76,14 +102,18 @@ permalink: /gallery/
       }
 
       const data = await photosRes.json();
-      photoUrls = data
-        .map(photoHash)
-        .filter(Boolean)
-        .map(function (hash) {
-          return PHOTOPRISM_URL + "/api/v1/t/" + hash + "/" + previewToken + "/fit_2048";
-        });
+      photos = data
+        .map(function (photo) {
+          const hash = photoHash(photo);
+          if (!hash) return null;
+          return {
+            photo: photo,
+            url: PHOTOPRISM_URL + "/api/v1/t/" + hash + "/" + previewToken + "/fit_2048"
+          };
+        })
+        .filter(Boolean);
 
-      if (photoUrls.length > 0) {
+      if (photos.length > 0) {
         showSlide(0, true);
         prevBtn.addEventListener("click", function () {
           showSlide(currentIndex - 1);
@@ -113,20 +143,19 @@ permalink: /gallery/
   }
 
   function showSlide(index, reveal) {
-    if (!photoUrls.length) return;
-    currentIndex = (index + photoUrls.length) % photoUrls.length;
-    const nextUrl = photoUrls[currentIndex];
+    if (!photos.length) return;
+    currentIndex = (index + photos.length) % photos.length;
+    const item = photos[currentIndex];
+    const nextUrl = item.url;
     const currentLayer = activeLayer === 1 ? layer1 : layer2;
     const nextLayer = activeLayer === 1 ? layer2 : layer1;
+
+    setFrame(item.photo);
 
     const img = new Image();
     img.src = nextUrl;
     img.onload = function () {
-      if (img.naturalHeight > img.naturalWidth) {
-        slideshowEl.classList.add("is-portrait");
-      } else {
-        slideshowEl.classList.remove("is-portrait");
-      }
+      setFrame(item.photo, img);
 
       nextLayer.src = nextUrl;
       nextLayer.classList.add("active");
