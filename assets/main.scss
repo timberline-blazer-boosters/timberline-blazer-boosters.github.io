@@ -163,6 +163,7 @@ img {
   margin-bottom: 1.25rem;
 }
 
+.outline-button,
 .contact-form button {
   display: inline-block;
   padding: 0.6rem 1.75rem;
@@ -171,13 +172,17 @@ img {
   background: #fff;
   color: #111;
   font: inherit;
+  text-decoration: none;
   cursor: pointer;
 }
 
+.outline-button:hover,
+.outline-button:focus,
 .contact-form button:hover,
 .contact-form button:focus {
   background: #111;
   color: #fff;
+  text-decoration: none;
 }
 
 .contact-form .contact-honey {
