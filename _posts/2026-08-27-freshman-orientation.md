@@ -3,6 +3,11 @@ layout: post
 title: "Welcome, Freshmen Class of 2030"
 date: 2026-08-27 11:00:00 -0700
 categories: news
+tags:
+  - news
+  - freshman
+  - orientation
+image: /assets/images/posts/FreshmenOrientation.jpg
 ---
 
 <img class="content-photo" src="{{ '/assets/images/posts/FreshmenOrientation.jpg' | relative_url }}" alt="Kona Ice and Blazer gear at Freshman Orientation">

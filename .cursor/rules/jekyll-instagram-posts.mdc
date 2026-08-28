@@ -1,0 +1,49 @@
+---
+description: Make Jekyll news posts Instagram-ready for the Make.com RSS scenario
+globs: _posts/**/*.md
+alwaysApply: false
+---
+
+# Instagram-ready Jekyll posts
+
+Every `_posts` entry is published to `/feed.xml` and picked up by Make.com (`us2.make.com`) for Instagram. Missing `image`/`tags` or a non-JPEG outside Instagram’s ratio will fail that scenario.
+
+## Required front matter
+
+```yaml
+layout: post
+title: "Short readable title"
+date: YYYY-MM-DD HH:MM:SS -0700
+categories: news
+tags:
+  - news
+  - topic-word
+image: /assets/images/posts/slug.jpg
+```
+
+- `image` must be a **JPEG** under `assets/images/posts/` (`.jpg`).
+- The **same file** must be the photo shown in the post body. Make does not convert or crop; Instagram gets this URL as-is.
+- `tags` must include `news` plus at least one topic tag (feeds + Make filters).
+
+## Image specs (Instagram photo post)
+
+| Rule | Value |
+|---|---|
+| Type | JPEG only (convert PNG/WebP/HEIC) |
+| Width | 1080px preferred (320–1440) |
+| Ratio width/height | **0.8–1.91** (4:5 to 1.91:1) |
+| Safe targets | **1080×1350** (4:5) or **1080×1080** (1:1) |
+
+If the source is too tall (for example 2:3), **crop** to 4:5 from the center, then resize. Do not letterbox. Keep the original for on-page display if needed; `image:` must point at the converted file.
+
+## Convert locally
+
+Use PowerShell `System.Drawing` or `magick`. Save as JPEG quality 90. Example target: `assets/images/posts/2026-08-28-new-website.jpg`.
+
+After converting, confirm ratio is between 0.8 and 1.91 and the path in `image:` matches the file.
+
+## Do not
+
+- Point `image:` at a relative HTML-only `<img>`, a PNG, or a PhotoPrism URL.
+- Use portrait crops taller than 4:5.
+- Skip `tags` or `image` on a news post.
