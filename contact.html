@@ -1,0 +1,51 @@
+---
+layout: page
+title: Contact the Booster Club
+nav_title: Contact
+permalink: /contact/
+---
+
+<div class="contact-hero">
+  <p>Have questions, want to volunteer, or interested in sponsorship? Reach out to support Timberline High School Blazers activities and sports.</p>
+  <img src="{{ '/assets/images/VvsMtView_4842-20250909.jpg' | relative_url }}" alt="A Timberline Blazers soccer player kicking the ball">
+</div>
+
+<div class="contact-form-block">
+  <div class="contact-form-header">
+    <h2>Contact</h2>
+    <p>Get in touch with the booster club for questions, volunteering, or sponsorships.</p>
+  </div>
+
+  <form class="contact-form" action="https://formsubmit.co/timberlineboosterclub@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="Booster Club contact form">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="{{ '/contact/thanks/' | absolute_url }}">
+    <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="contact-honey">
+
+    <div class="contact-name-row">
+      <p>
+        <label for="contact-first">First name <span class="req">(required)</span></label>
+        <input id="contact-first" type="text" name="First name" required autocomplete="given-name">
+      </p>
+      <p>
+        <label for="contact-last">Last name <span class="req">(required)</span></label>
+        <input id="contact-last" type="text" name="Last name" required autocomplete="family-name">
+      </p>
+    </div>
+
+    <p>
+      <label for="contact-email">Email <span class="req">(required)</span></label>
+      <input id="contact-email" type="email" name="Email" required autocomplete="email">
+    </p>
+
+    <p>
+      <label for="contact-message">Message</label>
+      <textarea id="contact-message" name="Message" rows="8"></textarea>
+    </p>
+
+    <p>
+      <button type="submit">Submit</button>
+    </p>
+  </form>
+</div>

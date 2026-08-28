@@ -4,11 +4,19 @@ theme: minima
 url: https://timberline-blazer-boosters.github.io
 
 header_pages:
+  - about.html
   - events.html
   - scholarships/index.html
   - donate.html
   - gallery.html
+  - contact.html
 
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+
+rss: rss
+
+feed:
+  path: /feed.xml
+  posts_limit: 20
