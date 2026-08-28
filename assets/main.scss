@@ -95,18 +95,27 @@ img {
   margin: 0;
 }
 
-.contact-form p {
-  margin: 0 0 1rem;
+.contact-form {
+  max-width: 40rem;
+}
+
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0 0 1.15rem;
 }
 
 .contact-form label {
   display: block;
-  margin-bottom: 0.35rem;
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  line-height: 1.3;
 }
 
 .contact-form .req {
   color: #666;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .contact-form input[type="text"],
@@ -114,11 +123,21 @@ img {
 .contact-form textarea {
   display: block;
   width: 100%;
-  padding: 0.65rem 0.75rem;
+  padding: 0.7rem 0.85rem;
   border: 1px solid #c6c6c6;
-  border-radius: 2px;
+  border-radius: 6px;
   background: #fff;
   font: inherit;
+  line-height: 1.4;
+  appearance: none;
+}
+
+.contact-form input[type="text"]:focus,
+.contact-form input[type="email"]:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #424242;
+  box-shadow: 0 0 0 3px rgba(66, 66, 66, 0.12);
 }
 
 .contact-form textarea {
@@ -132,10 +151,15 @@ img {
   gap: 1rem;
 }
 
+.contact-name-row .contact-field {
+  margin-bottom: 1.15rem;
+}
+
 .contact-form button {
   display: inline-block;
-  padding: 0.55rem 1.75rem;
+  padding: 0.65rem 1.85rem;
   border: 1px solid #111;
+  border-radius: 6px;
   background: #fff;
   color: #111;
   font: inherit;
