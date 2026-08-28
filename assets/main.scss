@@ -42,6 +42,19 @@ img {
   height: auto;
 }
 
+.post-image-center {
+  text-align: center;
+  margin: 1rem 0 1.5rem;
+}
+
+.post-image-center img {
+  display: block;
+  width: auto;
+  max-width: min(100%, 720px);
+  height: auto;
+  margin: 0 auto;
+}
+
 .roster-table-wrap {
   display: flex;
   justify-content: center;
