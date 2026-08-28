@@ -1,0 +1,63 @@
+---
+layout: page
+title: Update lists
+permalink: /update/
+---
+
+<!--
+  Make.com (us2): new scenario, not the Instagram RSS one.
+  1. Custom webhook with file uploads. Set Respond = from Webhook response module.
+  2. Paste the hook URL into this form's action.
+  3. Filter: secret equals UPLOAD_SECRET (store in Make, not here).
+  4. Parse CSV; last_initial = first letter of last_name; write only redacted columns.
+  5. kind=donors → create/update _data/donors.csv
+     kind=members → create/update _data/members.csv
+  6. Webhook response 302 → /update/thanks/ or /update/error/
+-->
+
+<div class="contact-form-block">
+  <div class="contact-form-header">
+    <h2>Update lists</h2>
+    <p>Officers: upload a CSV to replace the membership roster or the donor ticker. Each upload replaces the whole list. Pages may take about a minute to rebuild.</p>
+  </div>
+
+  <form id="update-form" class="contact-form" action="https://hook.us2.make.com/YOUR_WEBHOOK_ID" method="POST" enctype="multipart/form-data">
+    <div class="contact-field">
+      <label for="update-kind">List <span class="req">(required)</span></label>
+      <select id="update-kind" name="kind" required>
+        <option value="">Select a list</option>
+        <option value="members">Members</option>
+        <option value="donors">Donors</option>
+      </select>
+    </div>
+
+    <div class="contact-field">
+      <label for="update-file">CSV file <span class="req">(required)</span></label>
+      <input id="update-file" type="file" name="file" accept=".csv,text/csv" required>
+    </div>
+
+    <div class="contact-field">
+      <label for="update-secret">Password <span class="req">(required)</span></label>
+      <input id="update-secret" type="password" name="secret" required autocomplete="current-password">
+    </div>
+
+    <div class="contact-field">
+      <button type="submit">Upload</button>
+    </div>
+  </form>
+</div>
+
+<h2>CSV format</h2>
+<p>Excel: File → Save As → CSV UTF-8. You may include full last names; Make stores only the first letter on the site.</p>
+
+<h3>Donors</h3>
+<pre><code>first_name,last_name,amount
+John,Doe,25.00
+Jane,Smith,100</code></pre>
+<p>Visitors see <code>John D — $25.00</code> on the Donate page ticker.</p>
+
+<h3>Members</h3>
+<pre><code>first_name,last_name,membership_type
+Jane,Doe,Family (Annual)
+Alex,Rivera,Individual</code></pre>
+<p>Visitors see <code>Jane D</code> and the membership type on the Membership page.</p>

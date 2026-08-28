@@ -6,6 +6,28 @@ permalink: /donate/
 
 <p>Thanks to our dedicated boosters, we’ve raised over $20,000 this year. This funding helps supply sports equipment, enhance school programs, and offer scholarships. Every donation counts.</p>
 
+{% if site.data.donors %}
+{% assign donor_rows = site.data.donors | where_exp: "d", "d.first_name" %}
+{% else %}
+{% assign donor_rows = nil %}
+{% endif %}
+{% if donor_rows and donor_rows.size > 0 %}
+<div class="donor-ticker" aria-label="Recent donors">
+  <div class="donor-ticker-track">
+    <div class="donor-ticker-list">
+      {% for donor in donor_rows %}
+      <span class="donor-ticker-item">{{ donor.first_name }} {{ donor.last_initial }} — ${{ donor.amount | replace: '$', '' | replace: ',', '' }}</span>
+      {% endfor %}
+    </div>
+    <div class="donor-ticker-list donor-ticker-copy" aria-hidden="true">
+      {% for donor in donor_rows %}
+      <span class="donor-ticker-item">{{ donor.first_name }} {{ donor.last_initial }} — ${{ donor.amount | replace: '$', '' | replace: ',', '' }}</span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
 <div class="cta-row">
   <a class="cta-button" href="https://timberline-booster.cheddarup.com" target="_blank" rel="noopener noreferrer">
     <img src="{{ '/assets/images/donate-graphic.png' | relative_url }}" alt="Donate to the Booster Club">

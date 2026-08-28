@@ -1,0 +1,36 @@
+---
+layout: page
+title: Membership
+permalink: /membership/
+---
+
+<p>Thank you to our booster club members. Names are shown as first name and last initial.</p>
+
+{% if site.data.members %}
+{% assign member_rows = site.data.members | where_exp: "m", "m.first_name" %}
+{% else %}
+{% assign member_rows = nil %}
+{% endif %}
+
+{% if member_rows and member_rows.size > 0 %}
+<div class="roster-table-wrap">
+  <table class="roster-table">
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Membership</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in member_rows %}
+      <tr>
+        <td>{{ member.first_name }} {{ member.last_initial }}</td>
+        <td>{{ member.membership_type }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p>Membership list coming soon.</p>
+{% endif %}
