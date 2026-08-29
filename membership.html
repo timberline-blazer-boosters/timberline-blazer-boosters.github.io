@@ -23,8 +23,9 @@ permalink: /membership/
     </thead>
     <tbody>
       {% for member in member_rows %}
+      {% assign member_initial = member.last_initial | default: member.last_name | slice: 0, 1 %}
       <tr>
-        <td>{{ member.first_name }} {{ member.last_initial }}</td>
+        <td>{{ member.first_name }} {{ member_initial }}</td>
         <td>{{ member.membership_type }}</td>
       </tr>
       {% endfor %}

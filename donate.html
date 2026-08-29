@@ -16,12 +16,14 @@ permalink: /donate/
   <div class="donor-ticker-track">
     <div class="donor-ticker-list">
       {% for donor in donor_rows %}
-      <span class="donor-ticker-item">{{ donor.first_name }} {{ donor.last_initial }} — ${{ donor.amount | replace: '$', '' | replace: ',', '' }}</span>
+      {% assign donor_initial = donor.last_initial | default: donor.last_name | slice: 0, 1 %}
+      <span class="donor-ticker-item">{{ donor.first_name }} {{ donor_initial }} — ${{ donor.amount | replace: '$', '' | replace: ',', '' }}</span>
       {% endfor %}
     </div>
     <div class="donor-ticker-list donor-ticker-copy" aria-hidden="true">
       {% for donor in donor_rows %}
-      <span class="donor-ticker-item">{{ donor.first_name }} {{ donor.last_initial }} — ${{ donor.amount | replace: '$', '' | replace: ',', '' }}</span>
+      {% assign donor_initial = donor.last_initial | default: donor.last_name | slice: 0, 1 %}
+      <span class="donor-ticker-item">{{ donor.first_name }} {{ donor_initial }} — ${{ donor.amount | replace: '$', '' | replace: ',', '' }}</span>
       {% endfor %}
     </div>
   </div>

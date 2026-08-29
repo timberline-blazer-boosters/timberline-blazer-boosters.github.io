@@ -9,7 +9,9 @@ permalink: /update/
   1. Custom webhook with file uploads. Set Respond = from Webhook response module.
   2. Paste the hook URL into this form's action.
   3. Filter: secret equals UPLOAD_SECRET (store in Make, not here).
-  4. Parse CSV; last_initial = first letter of last_name; write only redacted columns.
+  4. Parse CSV; write a header row plus redacted columns only.
+     Donors file must start with: first_name,last_initial,amount
+     Members file must start with: first_name,last_initial,membership_type
   5. kind=donors → create/update _data/donors.csv
      kind=members → create/update _data/members.csv
   6. Webhook response 302 → /update/thanks/ or /update/error/
