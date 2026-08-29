@@ -43,7 +43,7 @@ permalink: /compose/
       <input id="compose-topic" type="text" name="topic" maxlength="40" autocomplete="off" placeholder="news">
     </div>
 
-    <div class="contact-field">
+    <div class="contact-field compose-image-field">
       <span class="compose-image-label">Image <span class="req">(required)</span></span>
       <div class="compose-drop" id="compose-drop">
         <input id="compose-image" class="compose-drop-input" type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>
@@ -53,10 +53,12 @@ permalink: /compose/
           </div>
         </div>
         <p class="compose-drop-hint" id="compose-drop-hint">Drop a photo here or click to choose. Drag to position it in the 4:5 frame.</p>
-        <button type="button" class="outline-button compose-drop-choose" id="compose-choose">Choose photo</button>
       </div>
-      <label class="compose-zoom-label" for="compose-zoom">Zoom</label>
-      <input id="compose-zoom" type="range" min="1" max="3" step="0.01" value="1" disabled>
+      <div class="compose-crop-controls">
+        <button type="button" class="outline-button compose-drop-choose" id="compose-choose">Choose photo</button>
+        <label class="compose-zoom-label" for="compose-zoom">Zoom</label>
+        <input id="compose-zoom" type="range" min="1" max="3" step="0.01" value="1" disabled>
+      </div>
     </div>
 
     <div class="contact-field">

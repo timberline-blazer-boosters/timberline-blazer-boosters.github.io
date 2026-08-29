@@ -498,11 +498,20 @@ img {
   line-height: 1.3;
 }
 
-.compose-zoom-label {
-  margin-top: 0.75rem;
+.compose-image-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.compose-image-field .compose-image-label {
+  width: 100%;
 }
 
 .compose-drop {
+  width: 100%;
+  max-width: 22rem;
+  overflow: hidden;
   border: 1px dashed #c6c6c6;
   border-radius: 6px;
   padding: 1rem;
@@ -528,10 +537,13 @@ img {
 
 .compose-crop-frame {
   position: relative;
-  width: min(100%, 320px);
-  margin: 0 auto 0.85rem;
+  width: min(100%, 16rem);
   aspect-ratio: 4 / 5;
+  height: auto;
+  margin: 0 auto 1rem;
   overflow: hidden;
+  isolation: isolate;
+  contain: paint;
   background: #111;
   border-radius: 6px;
   touch-action: none;
@@ -544,9 +556,8 @@ img {
 }
 
 .compose-crop-stage {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
 }
 
@@ -554,20 +565,42 @@ img {
   position: absolute;
   left: 50%;
   top: 50%;
+  z-index: 0;
   max-width: none;
+  width: auto;
   height: auto;
   transform-origin: center center;
   pointer-events: none;
 }
 
 .compose-drop-hint {
-  margin: 0 0 0.85rem;
+  position: relative;
+  z-index: 1;
+  margin: 0;
   font-size: 0.95rem;
   line-height: 1.45;
   color: #424242;
+  text-align: center;
+}
+
+.compose-crop-controls {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 22rem;
+  margin: 1rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .compose-drop-choose {
   display: inline-block;
+  align-self: center;
+  margin-bottom: 0.85rem;
+}
+
+.compose-zoom-label {
+  margin-top: 0;
 }
 
