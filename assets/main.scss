@@ -489,3 +489,85 @@ img {
     background-color: #fdfdfd;
   }
 }
+
+.compose-image-label,
+.compose-zoom-label {
+  display: block;
+  margin: 0 0 0.45rem;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.compose-zoom-label {
+  margin-top: 0.75rem;
+}
+
+.compose-drop {
+  border: 1px dashed #c6c6c6;
+  border-radius: 6px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.compose-drop.is-dragover {
+  border-color: #111;
+  background: #f7f7f7;
+}
+
+.compose-drop-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.compose-crop-frame {
+  position: relative;
+  width: min(100%, 320px);
+  margin: 0 auto 0.85rem;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #111;
+  border-radius: 6px;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.compose-crop-frame.is-dragging {
+  cursor: grabbing;
+}
+
+.compose-crop-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.compose-crop-img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: none;
+  height: auto;
+  transform-origin: center center;
+  pointer-events: none;
+}
+
+.compose-drop-hint {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #424242;
+}
+
+.compose-drop-choose {
+  display: inline-block;
+}
+

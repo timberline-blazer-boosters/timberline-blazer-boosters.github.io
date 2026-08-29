@@ -44,8 +44,19 @@ permalink: /compose/
     </div>
 
     <div class="contact-field">
-      <label for="compose-image">Image <span class="req">(required)</span></label>
-      <input id="compose-image" type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>
+      <span class="compose-image-label">Image <span class="req">(required)</span></span>
+      <div class="compose-drop" id="compose-drop">
+        <input id="compose-image" class="compose-drop-input" type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>
+        <div class="compose-crop-frame" id="compose-crop-frame" hidden>
+          <div class="compose-crop-stage" id="compose-crop-stage">
+            <img class="compose-crop-img" id="compose-crop-img" alt="Crop preview">
+          </div>
+        </div>
+        <p class="compose-drop-hint" id="compose-drop-hint">Drop a photo here or click to choose. Drag to position it in the 4:5 frame.</p>
+        <button type="button" class="outline-button compose-drop-choose" id="compose-choose">Choose photo</button>
+      </div>
+      <label class="compose-zoom-label" for="compose-zoom">Zoom</label>
+      <input id="compose-zoom" type="range" min="1" max="3" step="0.01" value="1" disabled>
     </div>
 
     <div class="contact-field">
@@ -60,5 +71,7 @@ permalink: /compose/
 </div>
 
 <h2>Photo for Instagram</h2>
-<p>Make converts the upload to a <strong>1080×1350 JPEG</strong> (4:5). JPEG is preferred. Avoid very tall portraits (2:3); Make will crop from the center. The same photo appears in the post and in the feed Instagram reads.</p>
+<p>Position the photo in the <strong>4:5</strong> window (Instagram portrait). On Publish, the page sends a <strong>1080×1350 JPEG</strong>. JPEG, PNG, or WebP work; HEIC may not preview in the browser.</p>
 <p>If a post with that title already exists for today, change the title and try again. Do not overwrite posts.</p>
+
+<script src="{{ '/assets/js/compose-crop.js' | relative_url }}"></script>
