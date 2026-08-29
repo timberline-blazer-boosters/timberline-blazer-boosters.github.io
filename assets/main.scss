@@ -600,7 +600,27 @@ img {
   margin-bottom: 0.85rem;
 }
 
-.compose-zoom-label {
-  margin-top: 0;
+.compose-nudge-row,
+.compose-zoom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.compose-zoom-row {
+  margin-bottom: 0;
+}
+
+.compose-zoom-row #compose-zoom {
+  flex: 1;
+  min-width: 0;
+}
+
+.compose-zoom-btn {
+  min-width: 2.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 

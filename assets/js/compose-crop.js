@@ -1,6 +1,8 @@
 (function () {
   var OUT_W = 1080;
   var OUT_H = 1350;
+  var ZOOM_MIN = 1;
+  var ZOOM_MAX = 4;
   var form = document.getElementById("compose-form");
   var input = document.getElementById("compose-image");
   var drop = document.getElementById("compose-drop");
@@ -9,6 +11,10 @@
   var hint = document.getElementById("compose-drop-hint");
   var choose = document.getElementById("compose-choose");
   var zoom = document.getElementById("compose-zoom");
+  var zoomIn = document.getElementById("compose-zoom-in");
+  var zoomOut = document.getElementById("compose-zoom-out");
+  var moveUp = document.getElementById("compose-up");
+  var moveDown = document.getElementById("compose-down");
 
   if (!form || !input || !drop || !frame || !img || !zoom) return;
 
@@ -22,7 +28,7 @@
   var submitting = false;
 
   function minScale() {
-    if (!img.naturalWidth || !frame.clientWidth) return 1;
+    if (!img.naturalWidth || !frame.clientWidth || !frame.clientHeight) return 1;
     return Math.max(frame.clientWidth / img.naturalWidth, frame.clientHeight / img.naturalHeight);
   }
 
@@ -46,10 +52,35 @@
       "translate(-50%, -50%) translate(" + panX + "px, " + panY + "px) scale(" + scale + ")";
   }
 
+  function setControlsEnabled(on) {
+    zoom.disabled = !on;
+    if (zoomIn) zoomIn.disabled = !on;
+    if (zoomOut) zoomOut.disabled = !on;
+    if (moveUp) moveUp.disabled = !on;
+    if (moveDown) moveDown.disabled = !on;
+  }
+
   function setZoomFromSlider() {
     scale = minScale() * Number(zoom.value);
     clampPan();
     applyTransform();
+  }
+
+  function bumpZoom(delta) {
+    var next = Number(zoom.value) + delta;
+    zoom.value = String(Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next)));
+    setZoomFromSlider();
+  }
+
+  function nudgeY(pixels) {
+    panY += pixels;
+    clampPan();
+    applyTransform();
+  }
+
+  function layoutAndApply() {
+    void frame.offsetHeight;
+    setZoomFromSlider();
   }
 
   function loadFile(file) {
@@ -58,16 +89,16 @@
     objectUrl = URL.createObjectURL(file);
     img.onload = function () {
       frame.hidden = false;
-      zoom.disabled = false;
-      zoom.value = "1";
+      img.style.width = img.naturalWidth + "px";
+      img.style.height = img.naturalHeight + "px";
       panX = 0;
       panY = 0;
-      scale = minScale();
-      img.style.width = img.naturalWidth + "px";
-      hint.textContent = "Drag the photo to position it. Use zoom if you need a tighter crop.";
+      var wide = img.naturalWidth / img.naturalHeight > 0.8;
+      zoom.value = wide ? "1.25" : "1.15";
+      setControlsEnabled(true);
+      hint.textContent = "Use + and − to zoom. Drag the photo, or tap Up / Down, to move it in the frame.";
       choose.textContent = "Choose a different photo";
-      clampPan();
-      applyTransform();
+      requestAnimationFrame(layoutAndApply);
     };
     img.src = objectUrl;
   }
@@ -140,24 +171,47 @@
       transfer.items.add(file);
       input.files = transfer.files;
     } catch (err) {
-      /* file input still required; crop uses the object URL below */
+      /* crop uses the object URL below */
     }
     loadFile(file);
   });
 
   zoom.addEventListener("input", setZoomFromSlider);
 
+  if (zoomIn) {
+    zoomIn.addEventListener("click", function () {
+      bumpZoom(0.2);
+    });
+  }
+  if (zoomOut) {
+    zoomOut.addEventListener("click", function () {
+      bumpZoom(-0.2);
+    });
+  }
+  if (moveUp) {
+    moveUp.addEventListener("click", function () {
+      nudgeY(-24);
+    });
+  }
+  if (moveDown) {
+    moveDown.addEventListener("click", function () {
+      nudgeY(24);
+    });
+  }
+
   frame.addEventListener("pointerdown", function (event) {
     if (frame.hidden) return;
+    event.preventDefault();
     dragging = true;
     lastX = event.clientX;
     lastY = event.clientY;
     frame.classList.add("is-dragging");
-    frame.setPointerCapture(event.pointerId);
+    if (frame.setPointerCapture) frame.setPointerCapture(event.pointerId);
   });
 
   frame.addEventListener("pointermove", function (event) {
     if (!dragging) return;
+    event.preventDefault();
     panX += event.clientX - lastX;
     panY += event.clientY - lastY;
     lastX = event.clientX;
@@ -179,9 +233,7 @@
     function (event) {
       if (frame.hidden) return;
       event.preventDefault();
-      var next = Number(zoom.value) + (event.deltaY < 0 ? 0.08 : -0.08);
-      zoom.value = String(Math.min(3, Math.max(1, next)));
-      setZoomFromSlider();
+      bumpZoom(event.deltaY < 0 ? 0.12 : -0.12);
     },
     { passive: false }
   );
@@ -189,7 +241,7 @@
   if (window.ResizeObserver) {
     new ResizeObserver(function () {
       if (frame.hidden || !img.naturalWidth) return;
-      setZoomFromSlider();
+      layoutAndApply();
     }).observe(frame);
   }
 
