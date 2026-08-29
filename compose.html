@@ -1,0 +1,64 @@
+---
+layout: page
+title: Compose a post
+permalink: /compose/
+---
+
+<!--
+  Make.com (us2): new scenario named "Booster compose post".
+  Do not reuse the Instagram RSS hook or the /update/ CSV hook.
+  1. Custom webhook with file uploads. Respond = from Webhook response module.
+  2. Paste the hook URL into this form's action. No x-make-apikey on this webhook.
+  3. COMPOSE_SECRET in Make variables. Filter: secret equals COMPOSE_SECRET.
+     Else 302 → https://timberline-blazer-boosters.github.io/compose/error/
+  4. Set slug, post_date (America/Los_Angeles, -0700), file_stub, image_path, md_path, topic_tag, yaml_title.
+  5. Convert upload to JPEG, crop/resize to 1080×1350 (4:5). Do not letterbox.
+  6. GitHub Create a File:
+     timberline-blazer-boosters / timberline-blazer-boosters.github.io / main
+     Image: assets/images/posts/{{file_stub}}.jpg
+     Markdown: _posts/{{file_stub}}.md
+     img src must be /assets/images/posts/{{file_stub}}.jpg (no relative_url in Make).
+  7. Success 302 → https://timberline-blazer-boosters.github.io/compose/thanks/
+-->
+
+<div class="contact-form-block">
+  <div class="contact-form-header">
+    <h2>Compose a post</h2>
+    <p>Officers: this publishes a news post on the site and in the RSS feed for Instagram. Pages may take about a minute to rebuild. Use a different password than the list-upload form if you set one in Make.</p>
+  </div>
+
+  <form id="compose-form" class="contact-form" action="https://hook.us2.make.com/YOUR_WEBHOOK_ID" method="POST" enctype="multipart/form-data">
+    <div class="contact-field">
+      <label for="compose-title">Title <span class="req">(required)</span></label>
+      <input id="compose-title" type="text" name="title" required maxlength="120" autocomplete="off">
+    </div>
+
+    <div class="contact-field">
+      <label for="compose-body">Body <span class="req">(required)</span></label>
+      <textarea id="compose-body" name="body" rows="10" required></textarea>
+    </div>
+
+    <div class="contact-field">
+      <label for="compose-topic">Topic tag</label>
+      <input id="compose-topic" type="text" name="topic" maxlength="40" autocomplete="off" placeholder="news">
+    </div>
+
+    <div class="contact-field">
+      <label for="compose-image">Image <span class="req">(required)</span></label>
+      <input id="compose-image" type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>
+    </div>
+
+    <div class="contact-field">
+      <label for="compose-secret">Password <span class="req">(required)</span></label>
+      <input id="compose-secret" type="password" name="secret" required autocomplete="current-password">
+    </div>
+
+    <div class="contact-field">
+      <button type="submit">Publish</button>
+    </div>
+  </form>
+</div>
+
+<h2>Photo for Instagram</h2>
+<p>Make converts the upload to a <strong>1080×1350 JPEG</strong> (4:5). JPEG is preferred. Avoid very tall portraits (2:3); Make will crop from the center. The same photo appears in the post and in the feed Instagram reads.</p>
+<p>If a post with that title already exists for today, change the title and try again. Do not overwrite posts.</p>
