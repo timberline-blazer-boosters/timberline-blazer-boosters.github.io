@@ -42,6 +42,6 @@ Thanks to our dedicated boosters, we’ve raised over $20,000 this year. This fu
 
 <p>
   <a class="cta-button" href="{{ '/donate/' | relative_url }}">
-    <img src="{{ '/assets/images/donate-graphic.png' | relative_url }}" alt="Donate">
+    <img src="{{ '/assets/images/new-donate-graphic.png' | relative_url }}" alt="Donate">
   </a>
 </p>

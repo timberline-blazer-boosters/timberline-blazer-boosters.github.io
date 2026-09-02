@@ -22,7 +22,7 @@
             {%- if my_page.title -%}
               {%- if path == 'donate.html' -%}
             <a class="page-link donate-link" href="{{ my_page.url | relative_url }}">
-              <img src="{{ '/assets/images/donate-graphic.png' | relative_url }}" alt="{{ my_page.nav_title | default: my_page.title | escape }}">
+              <img src="{{ '/assets/images/new-donate-graphic.png' | relative_url }}" alt="{{ my_page.nav_title | default: my_page.title | escape }}">
             </a>
               {%- else -%}
             <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.nav_title | default: my_page.title | escape }}</a>
