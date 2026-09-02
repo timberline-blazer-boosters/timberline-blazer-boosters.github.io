@@ -445,7 +445,8 @@ img {
   border: 0;
 }
 
-.site-nav .join-link {
+.site-nav .join-link,
+.site-nav .donate-link {
   display: inline-block;
   vertical-align: middle;
   line-height: 0;
@@ -455,6 +456,12 @@ img {
   height: 28px;
   width: auto;
   max-width: 80px;
+}
+
+.site-nav .donate-link img {
+  height: 28px;
+  width: auto;
+  max-width: 120px;
 }
 
 @media screen and (max-width: 600px) {
