@@ -41,7 +41,7 @@ Thanks to our dedicated boosters, we’ve raised over $20,000 this year. This fu
 </div>
 
 <p>
-  <a class="cta-button" href="{{ '/donate/' | relative_url }}">
+  <a class="cta-button" href="https://my.cheddarup.com/c/timberline-donations" target="_blank" rel="noopener noreferrer">
     <img src="{{ '/assets/images/new-donate-graphic.png' | relative_url }}" alt="Donate">
   </a>
 </p>
