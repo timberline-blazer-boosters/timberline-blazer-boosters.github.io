@@ -34,37 +34,34 @@
     <script data-goatcounter="https://timberlineblazers.goatcounter.com/count"
             async src="https://gc.zgo.at/count.js"></script>
 
-    <!-- GoatCounter visitor count -->
-    <div class="footer-visitor-count" style="margin-top: 1em; font-size: 0.875em; color: #828282;">
-      <span id="gc-visitor-count"></span>
-    </div>
+    <!-- Visitor count: first-party JSON so Edge tracking prevention cannot hide it -->
+    <div id="gc-visitor-count" class="footer-visitor-count" style="margin-top: 1em; font-size: 0.875em; color: #828282;"></div>
 
     <script>
       (function() {
-        var attempts = 0;
-        var maxAttempts = 50;
-        
-        function loadVisitorCount() {
-          attempts++;
-          
-          if (window.goatcounter && window.goatcounter.visit_count) {
-            window.goatcounter.visit_count({
-              type: 'html',
-              append: '#gc-visitor-count',
-              path: 'TOTAL',
-              no_branding: true,
-              style: 'color: #828282; text-decoration: none;'
-            });
-          } else if (attempts < maxAttempts) {
-            setTimeout(loadVisitorCount, 100);
-          }
+        var el = document.getElementById('gc-visitor-count');
+        if (!el) return;
+
+        var localUrl = '{{ "/assets/data/visitor-count.json" | relative_url }}';
+        var remoteUrl = 'https://timberlineblazers.goatcounter.com/counter/TOTAL.json';
+
+        function show(data) {
+          if (!data || data.count == null) throw new Error('missing count');
+          el.textContent = data.count + ' site views';
         }
-        
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', loadVisitorCount);
-        } else {
-          loadVisitorCount();
+
+        function load(url) {
+          return fetch(url, { cache: 'no-store' }).then(function(r) {
+            if (!r.ok) throw new Error(r.status);
+            return r.json();
+          });
         }
+
+        load(localUrl).then(show).catch(function() {
+          load(remoteUrl).then(show).catch(function() {
+            el.remove();
+          });
+        });
       })();
     </script>
 
