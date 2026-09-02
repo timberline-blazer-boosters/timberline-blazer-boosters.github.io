@@ -30,9 +30,13 @@
       </div>
     </div>
 
+    <!-- GoatCounter analytics -->
+    <script data-goatcounter="https://timberlineblazers.goatcounter.com/count"
+            async src="https://gc.zgo.at/count.js"></script>
+
     <!-- GoatCounter visitor count -->
     <div class="footer-visitor-count" style="margin-top: 1em; font-size: 0.875em; color: #828282;">
-      <span id="gc-visitor-count">Loading visitor count...</span>
+      <span id="gc-visitor-count"></span>
     </div>
 
     <script>
@@ -53,8 +57,6 @@
             });
           } else if (attempts < maxAttempts) {
             setTimeout(loadVisitorCount, 100);
-          } else {
-            document.getElementById('gc-visitor-count').textContent = '';
           }
         }
         
