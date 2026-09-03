@@ -15,6 +15,18 @@
   var zoomOut = document.getElementById("compose-zoom-out");
   var moveUp = document.getElementById("compose-up");
   var moveDown = document.getElementById("compose-down");
+  var imagesInput = document.getElementById("compose-images");
+  var videoInput = document.getElementById("compose-video");
+  var thumbs = document.getElementById("compose-thumbs");
+  var videoName = document.getElementById("compose-video-name");
+  var mediaType = document.getElementById("compose-media-type");
+  var tagsField = document.getElementById("compose-tags");
+  var topicField = document.getElementById("compose-topic");
+  var hashtagsField = document.getElementById("compose-hashtags");
+  var altField = document.getElementById("compose-alt-field");
+  var panelImage = document.getElementById("compose-panel-image");
+  var panelCarousel = document.getElementById("compose-panel-carousel");
+  var panelReel = document.getElementById("compose-panel-reel");
 
   if (!form || !input || !drop || !frame || !img || !zoom) return;
 
@@ -245,25 +257,191 @@
     }).observe(frame);
   }
 
+  function currentKind() {
+    var picked = form.querySelector('input[name="media_kind"]:checked');
+    return picked ? picked.value : "image";
+  }
+
+  function buildTags() {
+    var tags = ["news"];
+    var topic = topicField && topicField.value ? topicField.value.trim() : "";
+    if (topic && tags.indexOf(topic) === -1) tags.push(topic);
+    var raw = hashtagsField && hashtagsField.value ? hashtagsField.value : "";
+    raw.replace(/#/g, " ").split(/[\s,]+/).forEach(function (part) {
+      var t = part.trim().toLowerCase();
+      if (t && tags.indexOf(t) === -1) tags.push(t);
+    });
+    return tags.join(",");
+  }
+
+  function syncMode() {
+    var kind = currentKind();
+    if (mediaType) {
+      mediaType.value = kind === "reel" ? "REELS" : kind === "carousel" ? "CAROUSEL" : "IMAGE";
+    }
+    if (panelImage) panelImage.hidden = kind !== "image";
+    if (panelCarousel) panelCarousel.hidden = kind !== "carousel";
+    if (panelReel) panelReel.hidden = kind !== "reel";
+    input.required = kind === "image";
+    if (imagesInput) imagesInput.required = kind === "carousel";
+    if (videoInput) videoInput.required = kind === "reel";
+    if (altField) altField.hidden = kind === "reel";
+  }
+
+  function loadImageFile(file, done) {
+    var image = new Image();
+    var url = URL.createObjectURL(file);
+    image.onload = function () {
+      URL.revokeObjectURL(url);
+      done(image);
+    };
+    image.onerror = function () {
+      URL.revokeObjectURL(url);
+      done(null);
+    };
+    image.src = url;
+  }
+
+  function squareJpeg(file, index, done) {
+    loadImageFile(file, function (image) {
+      if (!image) {
+        done(null);
+        return;
+      }
+      var side = Math.min(image.naturalWidth, image.naturalHeight);
+      var sx = (image.naturalWidth - side) / 2;
+      var sy = (image.naturalHeight - side) / 2;
+      var canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1080;
+      canvas.getContext("2d").drawImage(image, sx, sy, side, side, 0, 0, 1080, 1080);
+      canvas.toBlob(
+        function (blob) {
+          if (!blob) {
+            done(null);
+            return;
+          }
+          done(new File([blob], "compose-" + (index + 1) + ".jpg", { type: "image/jpeg" }));
+        },
+        "image/jpeg",
+        0.9
+      );
+    });
+  }
+
+  function convertCarousel(files, done) {
+    var out = [];
+    var i = 0;
+    function next() {
+      if (i >= files.length) {
+        done(out);
+        return;
+      }
+      squareJpeg(files[i], i, function (file) {
+        if (file) out.push(file);
+        i += 1;
+        next();
+      });
+    }
+    next();
+  }
+
+  function renderThumbs(fileList) {
+    if (!thumbs) return;
+    thumbs.innerHTML = "";
+    Array.prototype.forEach.call(fileList, function (file) {
+      if (!file.type || file.type.indexOf("image/") !== 0) return;
+      var preview = document.createElement("img");
+      preview.alt = file.name;
+      preview.src = URL.createObjectURL(file);
+      thumbs.appendChild(preview);
+    });
+  }
+
+  function finishSubmit() {
+    if (tagsField) tagsField.value = buildTags();
+    submitting = true;
+    form.submit();
+  }
+
+  form.querySelectorAll('input[name="media_kind"]').forEach(function (radio) {
+    radio.addEventListener("change", syncMode);
+  });
+  syncMode();
+
+  if (imagesInput) {
+    imagesInput.addEventListener("change", function () {
+      renderThumbs(imagesInput.files || []);
+    });
+  }
+  if (videoInput) {
+    videoInput.addEventListener("change", function () {
+      var file = videoInput.files && videoInput.files[0];
+      if (videoName) {
+        videoName.textContent = file ? file.name + (file.type === "video/mp4" || /\.mp4$/i.test(file.name) ? "" : " — use an MP4") : "";
+      }
+    });
+  }
+
   form.addEventListener("submit", function (event) {
     if (submitting) return;
-    if (frame.hidden || !img.naturalWidth) return;
-    event.preventDefault();
-    cropToJpeg(function (file) {
-      if (!file) {
-        form.submit();
+    if (tagsField) tagsField.value = buildTags();
+    var kind = currentKind();
+
+    if (kind === "image") {
+      if (frame.hidden || !img.naturalWidth) return;
+      event.preventDefault();
+      cropToJpeg(function (file) {
+        if (file) {
+          try {
+            var transfer = new DataTransfer();
+            transfer.items.add(file);
+            input.files = transfer.files;
+          } catch (err) {
+            /* send original */
+          }
+        }
+        finishSubmit();
+      });
+      return;
+    }
+
+    if (kind === "carousel") {
+      event.preventDefault();
+      var picked = imagesInput && imagesInput.files ? Array.prototype.slice.call(imagesInput.files, 0, 10) : [];
+      picked = picked.filter(function (file) {
+        return file.type && file.type.indexOf("image/") === 0;
+      });
+      if (picked.length < 2) {
+        window.alert("Choose at least two photos for a carousel.");
         return;
       }
-      try {
-        var transfer = new DataTransfer();
-        transfer.items.add(file);
-        input.files = transfer.files;
-      } catch (err) {
-        form.submit();
-        return;
+      convertCarousel(picked, function (jpegs) {
+        if (!jpegs.length) {
+          window.alert("Could not convert those photos to JPEG.");
+          return;
+        }
+        try {
+          var transfer = new DataTransfer();
+          jpegs.forEach(function (file) {
+            transfer.items.add(file);
+          });
+          imagesInput.files = transfer.files;
+        } catch (err) {
+          /* send originals */
+        }
+        finishSubmit();
+      });
+      return;
+    }
+
+    if (kind === "reel") {
+      var video = videoInput && videoInput.files && videoInput.files[0];
+      if (!video) return;
+      if (video.type && video.type !== "video/mp4" && !/\.mp4$/i.test(video.name)) {
+        event.preventDefault();
+        window.alert("Reels must be an MP4 file.");
       }
-      submitting = true;
-      form.submit();
-    });
+    }
   });
 })();
