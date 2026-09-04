@@ -1,0 +1,10 @@
+<div id="menu-pdf" class="menu-pdf" data-pdf="{{ page.menu_pdf | relative_url }}">
+  <p id="menu-pdf-fallback" class="menu-pdf-status">Loading menu…</p>
+</div>
+<noscript>
+  <p class="menu-pdf-status">
+    <a class="outline-button" href="{{ page.menu_pdf | relative_url }}">Open the concessions menu (PDF)</a>
+  </p>
+</noscript>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="{{ "/assets/js/menu-pdf.js" | relative_url }}"></script>

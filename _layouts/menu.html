@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {%- seo -%}
+    <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+  </head>
+  <body class="menu-page">
+    <header class="menu-top">
+      <div class="menu-top-copy">
+        <a class="menu-top-brand" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+        <h1 class="menu-top-title">{{ page.title | escape }}</h1>
+      </div>
+      <a class="outline-button menu-open-pdf" href="{{ page.menu_pdf | relative_url }}" target="_blank" rel="noopener">Open PDF</a>
+    </header>
+
+    <main class="menu-main" aria-label="{{ page.title | escape }}">
+      {{ content }}
+    </main>
+
+    <script data-goatcounter="https://timberlineblazers.goatcounter.com/count"
+            async src="https://gc.zgo.at/count.js"></script>
+  </body>
+</html>

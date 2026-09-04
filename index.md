@@ -17,8 +17,9 @@ We work closely with coaches, teachers, and families to offer resources and enco
 
 Join us on game nights and support Timberline activities and athletics through concessions purchases.
 
-<p>
-  <a class="outline-button" href="{{ '/contact/#contact-form' | relative_url }}">Contact</a>
+<p class="cta-row">
+  <a class="outline-button" href="{{ '/menu-school/' | relative_url }}">School menu</a>
+  <a class="outline-button" href="{{ '/menu-stadium/' | relative_url }}">Stadium menu</a>
 </p>
 
 <img class="content-photo" src="{{ '/assets/images/volleyball.jpg' | relative_url }}" alt="Timberline students and pep band in the stands">
