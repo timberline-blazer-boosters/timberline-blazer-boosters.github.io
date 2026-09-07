@@ -1,0 +1,176 @@
+(function () {
+  var slideshowEl = document.getElementById("gallery-slideshow");
+  if (!slideshowEl) return;
+
+  var PHOTOPRISM_URL = slideshowEl.getAttribute("data-photoprism-url") || "https://photos.tlblazers.com";
+  var SHARE_TOKEN = slideshowEl.getAttribute("data-share-token");
+  var ROTATION_INTERVAL = 6000;
+
+  var photos = [];
+  var currentIndex = 0;
+  var activeLayer = 1;
+  var rotateTimer = null;
+
+  var layer1 = document.getElementById("gallery-layer-1");
+  var layer2 = document.getElementById("gallery-layer-2");
+  var statusEl = document.getElementById("gallery-status");
+  var prevBtn = document.getElementById("gallery-prev");
+  var nextBtn = document.getElementById("gallery-next");
+
+  function photoHash(photo) {
+    if (photo.Hash) return photo.Hash;
+    if (photo.Files && photo.Files[0] && photo.Files[0].Hash) return photo.Files[0].Hash;
+    return "";
+  }
+
+  function isPortraitPhoto(photo, img) {
+    if (img && img.naturalHeight > img.naturalWidth) return true;
+    if (photo && photo.Portrait) return true;
+
+    var file = photo && photo.Files && photo.Files[0] ? photo.Files[0] : photo;
+    var orientation = (file && file.Orientation) || (photo && photo.Orientation) || 1;
+    var rotated = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8;
+    var width = (file && file.Width) || (photo && photo.Width) || 0;
+    var height = (file && file.Height) || (photo && photo.Height) || 0;
+
+    if (width && height) {
+      if (rotated ? width > height : height > width) return true;
+    }
+
+    if (file && file.AspectRatio && file.AspectRatio < 1) return true;
+
+    return false;
+  }
+
+  function setFrame(photo, img) {
+    slideshowEl.classList.toggle("is-portrait", isPortraitPhoto(photo, img));
+  }
+
+  function albumLink(label) {
+    return '<a href="' + PHOTOPRISM_URL + "/s/" + SHARE_TOKEN + '">' + label + "</a>";
+  }
+
+  async function fetchAlbumPhotos() {
+    if (!SHARE_TOKEN) {
+      statusEl.innerHTML = "This gallery is missing a share token.";
+      return;
+    }
+
+    try {
+      var sessionRes = await fetch(PHOTOPRISM_URL + "/api/v1/session", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token: SHARE_TOKEN })
+      });
+
+      if (!sessionRes.ok) {
+        throw new Error("Session error: " + sessionRes.status);
+      }
+
+      var session = await sessionRes.json();
+      var sessionId = session.id;
+      var previewToken = (session.config && session.config.previewToken) || "public";
+      var albumUid = session.data && session.data.shares && session.data.shares[0];
+
+      var photosUrl = new URL("/api/v1/photos", PHOTOPRISM_URL);
+      photosUrl.searchParams.set("count", "100");
+      photosUrl.searchParams.set("merged", "true");
+      photosUrl.searchParams.set("order", "newest");
+      if (albumUid) {
+        photosUrl.searchParams.set("album", albumUid);
+      }
+
+      var photosRes = await fetch(photosUrl.toString(), {
+        headers: {
+          Accept: "application/json",
+          "X-Session-ID": sessionId
+        }
+      });
+
+      if (!photosRes.ok) {
+        throw new Error("Photos error: " + photosRes.status);
+      }
+
+      var data = await photosRes.json();
+      photos = data
+        .map(function (photo) {
+          var hash = photoHash(photo);
+          if (!hash) return null;
+          return {
+            photo: photo,
+            url: PHOTOPRISM_URL + "/api/v1/t/" + hash + "/" + previewToken + "/fit_2048"
+          };
+        })
+        .filter(Boolean);
+
+      if (photos.length > 0) {
+        showSlide(0, true);
+        prevBtn.addEventListener("click", function () {
+          showSlide(currentIndex - 1);
+          startAutoplay();
+        });
+        nextBtn.addEventListener("click", function () {
+          showSlide(currentIndex + 1);
+          startAutoplay();
+        });
+        document.addEventListener("keydown", function (event) {
+          if (slideshowEl.hidden) return;
+          if (event.key === "ArrowLeft") {
+            showSlide(currentIndex - 1);
+            startAutoplay();
+          } else if (event.key === "ArrowRight") {
+            showSlide(currentIndex + 1);
+            startAutoplay();
+          }
+        });
+      } else {
+        statusEl.innerHTML = "No photos found. " + albumLink("Open the album") + ".";
+      }
+    } catch (error) {
+      console.error("Failed to load photos from PhotoPrism:", error);
+      statusEl.innerHTML = "Could not load the gallery here. " + albumLink("View photos on PhotoPrism") + ".";
+    }
+  }
+
+  function showSlide(index, reveal) {
+    if (!photos.length) return;
+    currentIndex = (index + photos.length) % photos.length;
+    var item = photos[currentIndex];
+    var nextUrl = item.url;
+    var currentLayer = activeLayer === 1 ? layer1 : layer2;
+    var nextLayer = activeLayer === 1 ? layer2 : layer1;
+
+    setFrame(item.photo);
+
+    var img = new Image();
+    img.src = nextUrl;
+    img.onload = function () {
+      setFrame(item.photo, img);
+
+      nextLayer.src = nextUrl;
+      nextLayer.classList.add("active");
+      currentLayer.classList.remove("active");
+      activeLayer = activeLayer === 1 ? 2 : 1;
+
+      if (reveal) {
+        statusEl.hidden = true;
+        slideshowEl.hidden = false;
+        startAutoplay();
+      }
+    };
+  }
+
+  function startAutoplay() {
+    if (rotateTimer) {
+      clearInterval(rotateTimer);
+    }
+    rotateTimer = setInterval(function () {
+      showSlide(currentIndex + 1);
+    }, ROTATION_INTERVAL);
+  }
+
+  fetchAlbumPhotos();
+})();

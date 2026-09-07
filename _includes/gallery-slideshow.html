@@ -1,0 +1,12 @@
+<p id="gallery-status">Loading photos…</p>
+
+<div id="gallery-slideshow" class="gallery-slideshow" hidden
+     data-photoprism-url="https://photos.tlblazers.com"
+     data-share-token="{{ include.share_token }}">
+  <img id="gallery-layer-1" class="gallery-slide" alt="{{ include.alt | default: 'Timberline Blazers gallery photo' }}">
+  <img id="gallery-layer-2" class="gallery-slide" alt="">
+  <button type="button" class="gallery-nav gallery-nav-prev" id="gallery-prev" aria-label="Previous photo">‹</button>
+  <button type="button" class="gallery-nav gallery-nav-next" id="gallery-next" aria-label="Next photo">›</button>
+</div>
+
+<script src="{{ '/assets/js/gallery-slideshow.js' | relative_url }}"></script>
