@@ -8,8 +8,11 @@ permalink: /gallery/
 
 <h2>Albums</h2>
 <p class="cta-row">
-  <a class="outline-button" href="{{ '/gallery/football/' | relative_url }}">Blazer Football</a>
-  <a class="outline-button" href="{{ '/gallery/volleyball/' | relative_url }}">Blazer Volleyball</a>
+  {% for album in site.data.galleries.albums %}
+    {% unless album.published == false %}
+    <a class="outline-button" href="{{ '/gallery/album/' | relative_url }}?id={{ album.slug | url_encode }}">{{ album.title }}</a>
+    {% endunless %}
+  {% endfor %}
 </p>
 
-{% include gallery-slideshow.html share_token="fu9r7cys9c" alt="Timberline Blazers gallery photo" %}
+{% include gallery-slideshow.html share_token=site.data.galleries.highlights.token alt="Timberline Blazers gallery photo" %}

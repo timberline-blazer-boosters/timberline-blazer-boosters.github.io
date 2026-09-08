@@ -1,7 +1,8 @@
 <p id="gallery-status">Loading photos…</p>
 
 <div id="gallery-slideshow" class="gallery-slideshow" hidden
-     data-photoprism-url="https://photos.tlblazers.com"
+     data-photoprism-url="{{ include.photoprism_url | default: site.data.galleries.photoprism_url | default: 'https://photos.tlblazers.com' }}"
+     data-gallery-index="{{ '/gallery/' | relative_url }}"
      data-share-token="{{ include.share_token }}">
   <img id="gallery-layer-1" class="gallery-slide" alt="{{ include.alt | default: 'Timberline Blazers gallery photo' }}">
   <img id="gallery-layer-2" class="gallery-slide" alt="">

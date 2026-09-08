@@ -5,6 +5,49 @@
   var PHOTOPRISM_URL = slideshowEl.getAttribute("data-photoprism-url") || "https://photos.tlblazers.com";
   var SHARE_TOKEN = slideshowEl.getAttribute("data-share-token");
   var ROTATION_INTERVAL = 6000;
+  var statusEl = document.getElementById("gallery-status");
+  var dataEl = document.getElementById("gallery-albums-data");
+
+  if (dataEl) {
+    var albumId = new URLSearchParams(window.location.search).get("id");
+    var galleries;
+    try {
+      galleries = JSON.parse(dataEl.textContent);
+    } catch (error) {
+      galleries = null;
+    }
+
+    var albums = galleries && galleries.albums ? galleries.albums : [];
+    var album = null;
+    for (var i = 0; i < albums.length; i += 1) {
+      if (albums[i].slug === albumId && albums[i].published !== false) {
+        album = albums[i];
+        break;
+      }
+    }
+
+    if (!album) {
+      var indexUrl = slideshowEl.getAttribute("data-gallery-index") || "/gallery/";
+      if (statusEl) {
+        statusEl.innerHTML = 'That album was not found. <a href="' + indexUrl + '">All galleries</a>.';
+      }
+      return;
+    }
+
+    SHARE_TOKEN = album.token;
+    if (galleries.photoprism_url) {
+      PHOTOPRISM_URL = galleries.photoprism_url;
+    }
+    slideshowEl.setAttribute("data-share-token", SHARE_TOKEN);
+    slideshowEl.setAttribute("data-photoprism-url", PHOTOPRISM_URL);
+
+    var titleEl = document.querySelector(".post-title");
+    if (titleEl) titleEl.textContent = album.title;
+    document.title = album.title;
+
+    var firstSlide = document.getElementById("gallery-layer-1");
+    if (firstSlide) firstSlide.alt = album.title + " gallery photo";
+  }
 
   var photos = [];
   var currentIndex = 0;
@@ -13,7 +56,6 @@
 
   var layer1 = document.getElementById("gallery-layer-1");
   var layer2 = document.getElementById("gallery-layer-2");
-  var statusEl = document.getElementById("gallery-status");
   var prevBtn = document.getElementById("gallery-prev");
   var nextBtn = document.getElementById("gallery-next");
 

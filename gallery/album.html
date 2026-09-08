@@ -1,0 +1,11 @@
+---
+layout: page
+title: Album
+permalink: /gallery/album/
+---
+
+<p><a href="{{ '/gallery/' | relative_url }}">All galleries</a></p>
+
+<script type="application/json" id="gallery-albums-data">{{ site.data.galleries | jsonify }}</script>
+
+{% include gallery-slideshow.html alt="Timberline Blazers gallery photo" %}
