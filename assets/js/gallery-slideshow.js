@@ -90,17 +90,6 @@
     return share.uid || share.UID || share.ShareUID || share.album || "";
   }
 
-  function authHeaders(session) {
-    var token = (session && (session.access_token || session.id)) || "";
-    var headers = { Accept: "application/json" };
-    if (token) {
-      headers.Authorization = "Bearer " + token;
-      headers["X-Auth-Token"] = token;
-      headers["X-Session-ID"] = token;
-    }
-    return headers;
-  }
-
   function asPhotoList(data) {
     if (Array.isArray(data)) return data;
     if (data && Array.isArray(data.photos)) return data.photos;
@@ -129,6 +118,7 @@
       }
 
       var session = await sessionRes.json();
+      var sessionId = session.id;
       var previewToken = (session.config && session.config.previewToken) || "public";
       var shares = session.data && session.data.shares;
       var albumUid = shareUid(shares && shares[0]);
@@ -142,7 +132,10 @@
       }
 
       var photosRes = await fetch(photosUrl.toString(), {
-        headers: authHeaders(session)
+        headers: {
+          Accept: "application/json",
+          "X-Session-ID": sessionId
+        }
       });
 
       if (!photosRes.ok) {
