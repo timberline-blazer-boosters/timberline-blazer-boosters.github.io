@@ -1,19 +1,25 @@
-# Add a sport with a unique slug and its own PhotoPrism share token.
-# Set published: false to hide an album without deleting it.
+# Top-level groups (Football 26-27, Volleyball 26-27).
+# Add a new game under that group's albums. Each album needs its own PhotoPrism token.
+# Set published: false on a group or album to hide it without deleting it.
 photoprism_url: https://photos.tlblazers.com
 
 highlights:
   title: Highlights
   token: fu9r7cys9c
 
-albums:
-  - slug: football-1
-    title: Blazer Football 2026 Opener vs Stadium
-    token: football26271
-  - slug: football-2
-    title: Blazer Football 2026 C vs Centralia
-    token: football26272
-  - slug: volleyball-1
-    title: Blazer Volleyball 2026 Jamboree
-    token: volleyball262711
-  
+groups:
+  - slug: football-2627
+    title: Football 26-27
+    albums:
+      - slug: football-1
+        title: Varsity vs Stadium
+        token: football26271
+      - slug: football-2
+        title: C vs Centralia
+        token: football26272
+  - slug: volleyball-2627
+    title: Volleyball 26-27
+    albums:
+      - slug: volleyball-1
+        title: Jamboree
+        token: volleyball262711

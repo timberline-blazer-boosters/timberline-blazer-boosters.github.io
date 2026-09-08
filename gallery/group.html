@@ -1,0 +1,15 @@
+---
+layout: page
+title: Season
+permalink: /gallery/group/
+---
+
+<p><a href="{{ '/gallery/' | relative_url }}">All galleries</a></p>
+
+<p id="gallery-group-albums" class="cta-row"
+   data-gallery-index="{{ '/gallery/' | relative_url }}"
+   data-album-url="{{ '/gallery/album/' | relative_url }}">Loading albums…</p>
+
+<script>window.GALLERY_ALBUMS = {{ site.data.galleries | jsonify }};</script>
+<script src="{{ '/assets/js/gallery-data.js' | relative_url }}?v=3"></script>
+<script src="{{ '/assets/js/gallery-group.js' | relative_url }}?v=3"></script>

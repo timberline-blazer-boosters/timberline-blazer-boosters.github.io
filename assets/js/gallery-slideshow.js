@@ -3,30 +3,15 @@
   if (!slideshowEl) return;
 
   var PHOTOPRISM_URL = slideshowEl.getAttribute("data-photoprism-url") || "https://photos.tlblazers.com";
-  var SHARE_TOKEN = slideshowEl.getAttribute("data-share-token");
+  var SHARE_TOKEN = (slideshowEl.getAttribute("data-share-token") || "").trim();
   var ROTATION_INTERVAL = 6000;
   var statusEl = document.getElementById("gallery-status");
-  var dataEl = document.getElementById("gallery-albums-data");
+  var galleries = window.GalleryData ? window.GalleryData.load() : null;
 
-  if (dataEl) {
-    var albumId = new URLSearchParams(window.location.search).get("id");
-    var galleries;
-    try {
-      galleries = JSON.parse(dataEl.textContent);
-    } catch (error) {
-      galleries = null;
-    }
+  if (window.GALLERY_ALBUMS && window.GalleryData) {
+    var found = window.GalleryData.findAlbum(galleries, new URLSearchParams(window.location.search).get("id"));
 
-    var albums = galleries && galleries.albums ? galleries.albums : [];
-    var album = null;
-    for (var i = 0; i < albums.length; i += 1) {
-      if (albums[i].slug === albumId && albums[i].published !== false) {
-        album = albums[i];
-        break;
-      }
-    }
-
-    if (!album) {
+    if (!found) {
       var indexUrl = slideshowEl.getAttribute("data-gallery-index") || "/gallery/";
       if (statusEl) {
         statusEl.innerHTML = 'That album was not found. <a href="' + indexUrl + '">All galleries</a>.';
@@ -34,7 +19,8 @@
       return;
     }
 
-    SHARE_TOKEN = album.token;
+    var album = found.album;
+    if (album.token) SHARE_TOKEN = String(album.token).trim();
     if (galleries.photoprism_url) {
       PHOTOPRISM_URL = galleries.photoprism_url;
     }
@@ -47,6 +33,12 @@
 
     var firstSlide = document.getElementById("gallery-layer-1");
     if (firstSlide) firstSlide.alt = album.title + " gallery photo";
+
+    var backEl = document.getElementById("gallery-back");
+    if (backEl && found.group) {
+      var groupUrl = slideshowEl.getAttribute("data-group-url") || "/gallery/group/";
+      backEl.innerHTML = '<a href="' + (slideshowEl.getAttribute("data-gallery-index") || "/gallery/") + '">All galleries</a> · <a href="' + groupUrl + "?id=" + encodeURIComponent(found.group.slug) + '">' + found.group.title + "</a>";
+    }
   }
 
   var photos = [];

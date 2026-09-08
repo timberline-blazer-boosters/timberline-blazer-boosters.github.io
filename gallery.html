@@ -4,15 +4,16 @@ title: Gallery
 permalink: /gallery/
 ---
 
-<p>Photos from Timberline Blazers games and events. Open an album to browse that season’s slideshow.</p>
+<p>Photos from Timberline Blazers games and events. Open a season, then pick an album.</p>
 
-<h2>Albums</h2>
+<h2>Seasons</h2>
 <p class="cta-row">
-  {% for album in site.data.galleries.albums %}
-    {% unless album.published == false %}
-    <a class="outline-button" href="{{ '/gallery/album/' | relative_url }}?id={{ album.slug | url_encode }}">{{ album.title }}</a>
+  {% for group in site.data.galleries.groups %}
+    {% unless group.published == false %}
+    <a class="outline-button" href="{{ '/gallery/group/' | relative_url }}?id={{ group.slug | url_encode }}">{{ group.title }}</a>
     {% endunless %}
   {% endfor %}
 </p>
 
-{% include gallery-slideshow.html share_token=site.data.galleries.highlights.token alt="Timberline Blazers gallery photo" %}
+{% assign highlight_token = site.data.galleries.highlights.token %}
+{% include gallery-slideshow.html share_token=highlight_token alt="Timberline Blazers gallery photo" %}
