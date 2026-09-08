@@ -84,6 +84,30 @@
     return '<a href="' + PHOTOPRISM_URL + "/s/" + SHARE_TOKEN + '">' + label + "</a>";
   }
 
+  function shareUid(share) {
+    if (!share) return "";
+    if (typeof share === "string") return share;
+    return share.uid || share.UID || share.ShareUID || share.album || "";
+  }
+
+  function authHeaders(session) {
+    var token = (session && (session.access_token || session.id)) || "";
+    var headers = { Accept: "application/json" };
+    if (token) {
+      headers.Authorization = "Bearer " + token;
+      headers["X-Auth-Token"] = token;
+      headers["X-Session-ID"] = token;
+    }
+    return headers;
+  }
+
+  function asPhotoList(data) {
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.photos)) return data.photos;
+    if (data && Array.isArray(data.Documents)) return data.Documents;
+    return [];
+  }
+
   async function fetchAlbumPhotos() {
     if (!SHARE_TOKEN) {
       statusEl.innerHTML = "This gallery is missing a share token.";
@@ -101,13 +125,13 @@
       });
 
       if (!sessionRes.ok) {
-        throw new Error("Session error: " + sessionRes.status);
+        throw new Error("session:" + sessionRes.status);
       }
 
       var session = await sessionRes.json();
-      var sessionId = session.id;
       var previewToken = (session.config && session.config.previewToken) || "public";
-      var albumUid = session.data && session.data.shares && session.data.shares[0];
+      var shares = session.data && session.data.shares;
+      var albumUid = shareUid(shares && shares[0]);
 
       var photosUrl = new URL("/api/v1/photos", PHOTOPRISM_URL);
       photosUrl.searchParams.set("count", "100");
@@ -118,17 +142,14 @@
       }
 
       var photosRes = await fetch(photosUrl.toString(), {
-        headers: {
-          Accept: "application/json",
-          "X-Session-ID": sessionId
-        }
+        headers: authHeaders(session)
       });
 
       if (!photosRes.ok) {
-        throw new Error("Photos error: " + photosRes.status);
+        throw new Error("photos:" + photosRes.status);
       }
 
-      var data = await photosRes.json();
+      var data = asPhotoList(await photosRes.json());
       photos = data
         .map(function (photo) {
           var hash = photoHash(photo);
@@ -165,7 +186,13 @@
       }
     } catch (error) {
       console.error("Failed to load photos from PhotoPrism:", error);
-      statusEl.innerHTML = "Could not load the gallery here. " + albumLink("View photos on PhotoPrism") + ".";
+      var detail = "";
+      if (error && String(error.message).indexOf("session:40") === 0) {
+        detail = " PhotoPrism rejected the share token. Each album needs its own unique token, with no share password.";
+      } else if (error && String(error.message).indexOf("photos:40") === 0) {
+        detail = " The share opened, but PhotoPrism blocked the photo list.";
+      }
+      statusEl.innerHTML = "Could not load the gallery here. " + albumLink("View photos on PhotoPrism") + "." + detail;
     }
   }
 
