@@ -10,7 +10,7 @@ albums:
   - slug: football-1
     title: Blazer Football 2026 Opener vs Stadium
     token: football2627-1
-  -slug: football-2
+  - slug: football-2
     title: Blazer Football 2026 C vs Centralia
     token: football2627-2
   - slug: volleyball-1
