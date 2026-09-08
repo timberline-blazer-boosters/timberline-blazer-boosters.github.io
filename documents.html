@@ -1,0 +1,20 @@
+---
+layout: page
+title: Documents
+permalink: /documents/
+---
+
+<p>Forms and contracts for Timberline Blazer Booster Club programs, concessions, and related school activities.</p>
+
+<ul>
+  {% for document in site.data.documents %}
+    {% unless document.published == false %}
+    <li>
+      <a href="{{ document.file | relative_url }}" target="_blank" rel="noopener">{{ document.title }}</a>
+      {% if document.description %}
+      <br><span class="document-desc">{{ document.description }}</span>
+      {% endif %}
+    </li>
+    {% endunless %}
+  {% endfor %}
+</ul>

@@ -1,0 +1,5 @@
+# Add a document with title, file path, and optional description.
+# Put the PDF in assets/documents/ and list it here.
+- title: Concession Stand Contract
+  file: /assets/documents/concession-stand-contract.pdf
+  description: 2025–26 Timberline High School Booster Club concession stand contract
