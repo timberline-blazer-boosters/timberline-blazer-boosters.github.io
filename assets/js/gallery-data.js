@@ -48,7 +48,7 @@ window.GalleryData = {
     for (g = 0; g < groups.length; g += 1) {
       albums = this.albumsIn(groups[g]);
       for (i = 0; i < albums.length; i += 1) {
-        if (albums[i].slug === slug) {
+        if (albums[i].slug === slug || albums[i].token === slug) {
           return { album: albums[i], group: groups[g] };
         }
       }
@@ -56,7 +56,7 @@ window.GalleryData = {
 
     var flat = (data && data.albums) || [];
     for (i = 0; i < flat.length; i += 1) {
-      if (this.isPublished(flat[i]) && flat[i].slug === slug) {
+      if (this.isPublished(flat[i]) && (flat[i].slug === slug || flat[i].token === slug)) {
         return { album: flat[i], group: null };
       }
     }

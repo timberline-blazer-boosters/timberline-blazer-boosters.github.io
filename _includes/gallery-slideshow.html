@@ -4,22 +4,23 @@
      data-photoprism-url="{{ include.photoprism_url | default: site.data.galleries.photoprism_url | default: 'https://photos.tlblazers.com' }}"
      data-gallery-index="{{ '/gallery/' | relative_url }}"
      data-group-url="{{ '/gallery/group/' | relative_url }}"
-     data-share-token="{{ include.share_token | default: '' | strip }}">
+     data-share-token="{{ include.share_token | default: site.data.galleries.highlights.token | strip }}">
   <img id="gallery-layer-1" class="gallery-slide" alt="{{ include.alt | default: 'Timberline Blazers gallery photo' }}">
   <img id="gallery-layer-2" class="gallery-slide" alt="">
   <button type="button" class="gallery-nav gallery-nav-prev" id="gallery-prev" aria-label="Previous photo">‹</button>
   <button type="button" class="gallery-nav gallery-nav-next" id="gallery-next" aria-label="Next photo">›</button>
 </div>
 
-<script src="{{ '/assets/js/gallery-data.js' | relative_url }}?v=5"></script>
+<script src="{{ '/assets/js/gallery-data.js' | relative_url }}?v=6"></script>
 <script>
 (function () {
   var slideshow = document.getElementById("gallery-slideshow");
   if (!slideshow || !window.GalleryData) return;
-  if (slideshow.getAttribute("data-share-token")) return;
+  var albumId = new URLSearchParams(window.location.search).get("id");
+  if (!albumId) return;
 
   var data = window.GalleryData.load();
-  var found = data ? window.GalleryData.findAlbum(data, new URLSearchParams(window.location.search).get("id")) : null;
+  var found = data ? window.GalleryData.findAlbum(data, albumId) : null;
   if (!found || !found.album.token) return;
 
   slideshow.setAttribute("data-share-token", found.album.token);
@@ -28,4 +29,4 @@
   }
 })();
 </script>
-<script src="{{ '/assets/js/gallery-slideshow.js' | relative_url }}?v=5"></script>
+<script src="{{ '/assets/js/gallery-slideshow.js' | relative_url }}?v=6"></script>

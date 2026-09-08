@@ -6,10 +6,11 @@
   var SHARE_TOKEN = (slideshowEl.getAttribute("data-share-token") || "").trim();
   var ROTATION_INTERVAL = 6000;
   var statusEl = document.getElementById("gallery-status");
+  var albumId = new URLSearchParams(window.location.search).get("id");
   var galleries = window.GalleryData ? window.GalleryData.load() : null;
 
-  if (window.GALLERY_ALBUMS && window.GalleryData) {
-    var found = window.GalleryData.findAlbum(galleries, new URLSearchParams(window.location.search).get("id"));
+  if (albumId && window.GalleryData) {
+    var found = window.GalleryData.findAlbum(galleries, albumId);
 
     if (!found) {
       var indexUrl = slideshowEl.getAttribute("data-gallery-index") || "/gallery/";
@@ -118,31 +119,40 @@
       }
 
       var session = await sessionRes.json();
-      var sessionId = session.id;
-      var previewToken = (session.config && session.config.previewToken) || "public";
+      var sessionId = session.id || session.access_token || session.session_id;
+      var cfg = session.config || {};
+      var previewToken = cfg.previewToken || cfg.preview_token || "public";
       var shares = session.data && session.data.shares;
       var albumUid = shareUid(shares && shares[0]);
 
-      var photosUrl = new URL("/api/v1/photos", PHOTOPRISM_URL);
-      photosUrl.searchParams.set("count", "100");
-      photosUrl.searchParams.set("merged", "true");
-      photosUrl.searchParams.set("order", "newest");
-      if (albumUid) {
-        photosUrl.searchParams.set("album", albumUid);
+      function requestPhotos(uid) {
+        var photosUrl = new URL("/api/v1/photos", PHOTOPRISM_URL);
+        photosUrl.searchParams.set("count", "100");
+        photosUrl.searchParams.set("merged", "true");
+        photosUrl.searchParams.set("order", "newest");
+        if (uid) photosUrl.searchParams.set("album", uid);
+        return fetch(photosUrl.toString(), {
+          headers: {
+            Accept: "application/json",
+            "X-Session-ID": sessionId
+          }
+        });
       }
 
-      var photosRes = await fetch(photosUrl.toString(), {
-        headers: {
-          Accept: "application/json",
-          "X-Session-ID": sessionId
-        }
-      });
+      var photosRes = await requestPhotos(albumUid);
+      if (!photosRes.ok && albumUid) {
+        photosRes = await requestPhotos("");
+      }
 
       if (!photosRes.ok) {
         throw new Error("photos:" + photosRes.status);
       }
 
       var data = asPhotoList(await photosRes.json());
+      if (!data.length && albumUid) {
+        photosRes = await requestPhotos("");
+        if (photosRes.ok) data = asPhotoList(await photosRes.json());
+      }
       photos = data
         .map(function (photo) {
           var hash = photoHash(photo);
@@ -201,6 +211,12 @@
 
     var img = new Image();
     img.src = nextUrl;
+    img.onerror = function () {
+      if (reveal && statusEl) {
+        statusEl.hidden = false;
+        statusEl.innerHTML = "Could not display the photo. " + albumLink("View photos on PhotoPrism") + ".";
+      }
+    };
     img.onload = function () {
       setFrame(item.photo, img);
 
