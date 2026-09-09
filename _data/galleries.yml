@@ -23,3 +23,9 @@ groups:
       - slug: volleyball-1
         title: Jamboree
         token: volleyball26271
+  - slug: soccer-2627
+    title: Soccer 26-27
+    albums:
+      - slug: soccer-1
+        title: Vs Emerald Ridge
+        token: aj6u96vue1
