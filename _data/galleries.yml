@@ -1,6 +1,5 @@
-# Top-level groups (Football 26-27, Volleyball 26-27).
-# Add a new game under that group's albums. Each album needs its own PhotoPrism token.
-# Set published: false on a group or album to hide it without deleting it.
+# Add a group (Football 26-27, Band and Crowd, …) then albums under it.
+# Each album needs its own PhotoPrism token. Set published: false to hide.
 photoprism_url: https://photos.tlblazers.com
 
 highlights:
@@ -17,6 +16,9 @@ groups:
       - slug: football-2
         title: C vs Centralia
         token: football26272
+      - slug: football-3
+        title: Varsity vs Bonnie Lake
+        token: 6cwmze50do
   - slug: volleyball-2627
     title: Volleyball 26-27
     albums:
@@ -32,3 +34,9 @@ groups:
       - slug: soccer-1
         title: Vs Emerald Ridge
         token: aj6u96vue1
+  - slug: band-and-crowd
+    title: Band and Crowd
+    albums:
+      - slug: band-1
+        title: 9/12 Football
+        token: c20pz5ibui

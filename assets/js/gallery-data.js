@@ -54,6 +54,18 @@ window.GalleryData = {
       }
     }
 
+    var categories = (data && data.categories) || [];
+    var c;
+    for (c = 0; c < categories.length; c += 1) {
+      if (!this.isPublished(categories[c])) continue;
+      albums = this.albumsIn(categories[c]);
+      for (i = 0; i < albums.length; i += 1) {
+        if (albums[i].slug === slug || albums[i].token === slug) {
+          return { album: albums[i], group: categories[c], category: true };
+        }
+      }
+    }
+
     var flat = (data && data.albums) || [];
     for (i = 0; i < flat.length; i += 1) {
       if (this.isPublished(flat[i]) && (flat[i].slug === slug || flat[i].token === slug)) {

@@ -37,8 +37,11 @@
 
     var backEl = document.getElementById("gallery-back");
     if (backEl && found.group) {
-      var groupUrl = slideshowEl.getAttribute("data-group-url") || "/gallery/group/";
-      backEl.innerHTML = '<a href="' + (slideshowEl.getAttribute("data-gallery-index") || "/gallery/") + '">All galleries</a> · <a href="' + groupUrl + "?id=" + encodeURIComponent(found.group.slug) + '">' + found.group.title + "</a>";
+      var indexUrl = slideshowEl.getAttribute("data-gallery-index") || "/gallery/";
+      var groupHref = found.category
+        ? indexUrl + "#" + encodeURIComponent(found.group.slug)
+        : (slideshowEl.getAttribute("data-group-url") || "/gallery/group/") + "?id=" + encodeURIComponent(found.group.slug);
+      backEl.innerHTML = '<a href="' + indexUrl + '">All galleries</a> · <a href="' + groupHref + '">' + found.group.title + "</a>";
     }
   }
 
