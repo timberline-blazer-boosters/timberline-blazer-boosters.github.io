@@ -1,7 +1,21 @@
 title: Timberline Blazers Booster Club
 description: Supporting Timberline High School athletics and activities
 theme: minima
-url: https://timberline-blazer-boosters.github.io
+url: https://timberlineblazerboosters.org
+lang: en
+timezone: America/Los_Angeles
+logo: /assets/images/logo.png
+
+twitter:
+  card: summary
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /assets/images/logo.png
+        alt: Timberline High School Blazers seal
 
 header_pages:
   - about.html
@@ -16,6 +30,7 @@ header_pages:
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 rss: rss
 

@@ -1,0 +1,28 @@
+---
+description: This repo is Jekyll on GitHub Pages (Minima), not Business Central AL
+alwaysApply: true
+---
+
+# Jekyll GitHub Pages site
+
+This repository is the **Timberline Blazers Booster Club** public site. Do not follow parent `AL Projects` AL, Object ID, AL-Go, or Object ID Ninja rules. Never run `Pull-CursorRules.ps1` in this repo.
+
+## Stack
+
+- GitHub Pages **native Jekyll** via the `github-pages` gem (not Jekyll 4, not a custom Actions build).
+- Theme: **Minima**. Layouts: `home`, `page`, `post`, plus `_layouts/menu.html` for QR menus.
+- Allowed plugins in `_config.yml`: `jekyll-feed`, `jekyll-seo-tag`, `jekyll-sitemap`. Prefer other **github-pages whitelist** plugins (`jekyll-redirect-from`) over custom Ruby gems.
+- Live host: **https://timberlineblazerboosters.org** (`CNAME`). Keep `url` in `_config.yml` matching that host so canonicals, `jekyll-seo-tag`, and `/feed.xml` are correct.
+
+## Content model
+
+- Nav: `_config.yml` `header_pages`. Do not add `/compose/` or `/update/` to nav.
+- Structured lists live in `_data/` (`galleries.yml`, `documents.yml`, CSVs). Pages loop that data.
+- Every HTML page needs `permalink: /slug/`. Asset URLs use `relative_url`.
+- Photos: PhotoPrism at `https://photos.tlblazers.com`. This repo stores **pages and share tokens**, not the photo library.
+
+## Do not
+
+- Add plugins GitHub Pages will not build.
+- Treat this as an AL app or invent AL-Go process.
+- Force-push `main`.

@@ -8,7 +8,7 @@
   var indexUrl = listEl.getAttribute("data-gallery-index") || "/gallery/";
 
   if (!group) {
-    listEl.innerHTML = 'That season was not found. <a href="' + indexUrl + '">All galleries</a>.';
+    listEl.innerHTML = 'That gallery was not found. <a href="' + indexUrl + '">All galleries</a>.';
     return;
   }
 
@@ -18,7 +18,7 @@
 
   var albums = window.GalleryData.albumsIn(group);
   if (!albums.length) {
-    listEl.textContent = "No albums in this season yet.";
+    listEl.textContent = "No albums in this group yet.";
     return;
   }
 

@@ -1,0 +1,44 @@
+---
+description: PhotoPrism gallery YAML, share tokens, and slideshow session/CORS rules
+globs: _data/galleries.yml,gallery/**/*.html,assets/js/gallery-*.js,_includes/gallery-*.html
+alwaysApply: false
+---
+
+# PhotoPrism gallery
+
+Albums are configured in `_data/galleries.yml`. Do not add per-album HTML pages.
+
+## YAML
+
+```yaml
+groups:
+  - slug: football-2627
+    title: Football 26-27
+    albums:
+      - slug: football-4
+        title: Varsity vs Opponent
+        token: uniquetoken
+```
+
+- Each album needs its **own unique** share token (no share password).
+- Hide with `published: false` on a group or album.
+- Highlights slideshow token: `highlights.token`.
+- Group buttons on `/gallery/` come from `groups` (not a separate `categories` heading).
+
+## Pages
+
+| URL | Role |
+|---|---|
+| `/gallery/` | Group buttons + highlights slideshow |
+| `/gallery/group/?id=SLUG` | Albums in that group |
+| `/gallery/album/?id=SLUG` | Slideshow (`id` matches **slug or token**) |
+
+## JS
+
+- Session: `POST {photoprism}/api/v1/session` with `{ token }`, then `X-Session-ID` only (no Bearer).
+- After changing `gallery-*.js`, bump `?v=` on **all** gallery script tags together.
+- Keep `window.GALLERY_ALBUMS = {{ site.data.galleries | jsonify }}` on group/album pages.
+
+## CORS
+
+PhotoPrism must allow `https://timberlineblazerboosters.org` and `https://timberline-blazer-boosters.github.io`.

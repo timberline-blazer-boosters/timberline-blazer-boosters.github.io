@@ -1,0 +1,35 @@
+---
+description: Permalinks, Liquid data, image weight, and Minima includes for site pages
+globs: "**/*.html,**/*.md,_includes/**/*.html,_layouts/**/*.html,assets/**/*.scss,assets/**/*.js"
+alwaysApply: false
+---
+
+# Pages and assets
+
+## Pages
+
+```yaml
+---
+layout: page
+title: Visible title
+permalink: /the-slug/
+---
+```
+
+- Put lists in `_data/` and loop them (`documents.yml`, `galleries.yml`). Don’t copy a new HTML file per album or PDF.
+- Use `{{ '/path/' | relative_url }}` and `{{ '/assets/…' | relative_url }}`.
+- Shared chrome: `_includes/` (header, footer, gallery, donate, jotform). Restyle in `assets/main.scss` after `@import "minima"`.
+- Keep `/compose/` and `/update/` out of `header_pages`. Form contracts: `officer-forms.mdc`.
+
+## Assets
+
+- GitHub Pages limits: ~1 GB repo, **100 MB per file**. Compress photos and PDFs before commit.
+- Post / Instagram images: JPEG under `assets/images/posts/` (see Instagram post rule).
+- Documents: PDF in `assets/documents/` + a row in `_data/documents.yml`.
+- Don’t hotlink PhotoPrism originals as `image:` front matter or as the only copy of a news photo.
+
+## GitHub Pages extras to prefer
+
+- `jekyll-sitemap` and `jekyll-redirect-from` (whitelist) when adding SEO or old-URL redirects.
+- `404.html` at the site root if adding a not-found page.
+- Logo, default social image, and page `description:` — see `site-seo.mdc`.

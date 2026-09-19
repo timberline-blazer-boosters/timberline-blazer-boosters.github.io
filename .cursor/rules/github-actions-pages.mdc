@@ -1,0 +1,23 @@
+---
+description: GitHub Actions vs native Pages build; visitor-count commits on main
+globs: .github/workflows/**/*.yml
+alwaysApply: false
+---
+
+# GitHub Actions on this Pages repo
+
+The site itself is built by **GitHub Pages’ native Jekyll**. Do not add a workflow that runs `jekyll build` and deploys unless a whitelist plugin is truly required.
+
+## Existing: visitor count
+
+`.github/workflows/update-visitor-count.yml` runs on a schedule, writes `assets/data/visitor-count.json`, and **commits to `main`**.
+
+- Content work must `git pull` (or rebase) those commits before push.
+- Never force-push `main` to overwrite GoatCounter updates.
+- Keep `permissions: contents: write` scoped to that job. Do not echo secrets.
+
+## Do not
+
+- Store Graph tokens, PATs, or Make secrets as repo variables that get printed in logs.
+- Check out and rewrite unrelated site files from Actions.
+- Replace the CNAME / custom-domain Pages source with a second host.

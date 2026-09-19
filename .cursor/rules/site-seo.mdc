@@ -1,0 +1,44 @@
+---
+description: jekyll-seo-tag logo, default social image, page descriptions, whitelist redirects
+globs: _config.yml,**/*.html,**/*.md
+alwaysApply: false
+---
+
+# Site SEO
+
+`jekyll-seo-tag` is already in `_config.yml`. Do not add a second SEO plugin or hand-written `og:` tags in layouts.
+
+## Default logo and social image
+
+Keep these in `_config.yml` (do not replace with a PhotoPrism URL or a post JPEG):
+
+```yaml
+logo: /assets/images/logo.png
+twitter:
+  card: summary
+defaults:
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /assets/images/logo.png
+        alt: Timberline High School Blazers seal
+```
+
+- `logo` is the JSON-LD publisher mark (the Blazers seal).
+- `defaults.image` is `og:image` / Twitter when the page has no `image:`.
+- News posts **must** keep their own Instagram JPEG in front matter (`jekyll-instagram-posts.mdc`). That overrides the seal.
+
+## Page descriptions
+
+Add a one-sentence `description:` in front matter on public pages. `site.description` is the fallback and is too generic for About, Events, Donate, etc.
+
+```yaml
+description: How to join the Timberline Blazers Booster Club and what membership includes.
+```
+
+Skip `/compose/` and `/update/` (not in nav; no need to rank them).
+
+## Redirects
+
+Use `jekyll-redirect-from` (Pages whitelist) only when an old URL must keep working. Do not switch to a custom Actions Jekyll build for SEO.

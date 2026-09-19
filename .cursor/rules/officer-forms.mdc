@@ -1,0 +1,35 @@
+---
+description: Officer compose/update Make forms and public contact FormSubmit — do not mix webhooks or secrets
+globs: compose*.html,update*.html,contact*.html,assets/js/compose-crop.js
+alwaysApply: false
+---
+
+# Officer and contact forms
+
+Keep `/compose/` and `/update/` **out of** `header_pages`. Do not add `description:` for SEO on those two (see `site-seo.mdc`). Secrets stay in Make or the typed password field (`public-site-secrets.mdc`).
+
+## Endpoints (do not swap)
+
+| Page | `form action` | Auth |
+|---|---|---|
+| `/compose/` | Make compose webhook already in `compose.html` | `secret` = `COMPOSE_SECRET` in Make |
+| `/update/` | Make **update** webhook already in `update.html` | `secret` = `UPLOAD_SECRET` in Make |
+| `/contact/` | FormSubmit URL already in `contact.html` | Honey pot only |
+
+Do not reuse the compose hook on `/update/`, the update hook on compose, or either hook for Instagram RSS. Do not point Contact at Make. Scholarships stay on Jotform (`_includes/jotform.html`).
+
+Make responds with 302 to `/compose/thanks/`, `/compose/error/`, `/update/thanks/`, `/update/error/`. Keep those permalinks.
+
+## Compose (`assets/js/compose-crop.js`)
+
+Browser crops/converts photos. Make must **not** re-crop, convert JPEGs, or remux the MP4.
+
+- `media_kind`: `image` (one `image`, 1080×1350) · `carousel` (`images`, 2–10 at 1080×1080) · `reel` (`video` MP4 as-is)
+- Keep `media_type`, `tags`, `website_only`, `social_caption`, `alt_text`
+- Duplicate title the same day → tell the officer to change the title; do not overwrite
+
+## Update lists
+
+Each upload **replaces** the whole CSV. `kind=donors` → `_data/donors.csv`; `kind=members` → `_data/members.csv`.
+
+Make redacts last names to an initial. Required headers: donors `first_name,last_name,amount`; members `first_name,last_name,membership_type`. Do not add columns that would publish full last names or emails.
