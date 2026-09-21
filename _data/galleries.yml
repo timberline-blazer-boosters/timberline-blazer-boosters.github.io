@@ -31,12 +31,21 @@ groups:
       - slug: volleyball-3
         title: V vs Central Kitsap
         token: hoepmwaeqd
+      - slug: volleyball-4
+        title: JV vs Central Kitsap
+        token: 8jglq729da
   - slug: soccer-2627
     title: Soccer 26-27
     albums:
       - slug: soccer-1
         title: Vs Emerald Ridge
         token: aj6u96vue1
+      - slug: soccer-2
+        title: V vs Olympia
+        token: pdapsnz18z
+      - slug: soccer-3
+        title: JV vs Olympia
+        token: 8mjq14v7mv
   - slug: band-and-crowd
     title: Band and Crowd
     albums:
