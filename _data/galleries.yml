@@ -19,6 +19,9 @@ groups:
       - slug: football-3
         title: Varsity vs Bonnie Lake
         token: 6cwmze50do
+      - slug: football-4
+        title: C vs Enumclaw
+        token: pu06zykby6
   - slug: volleyball-2627
     title: Volleyball 26-27
     albums:
