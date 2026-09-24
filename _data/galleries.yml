@@ -49,6 +49,9 @@ groups:
       - slug: soccer-3
         title: JV vs Olympia
         token: 8mjq14v7mv
+      - slug: soccer-4
+        title: V vs Mt Tahoma
+        token: 7cvu54q856
   - slug: band-and-crowd
     title: Band and Crowd
     albums:
