@@ -5,3 +5,11 @@ _site/
 vendor/
 _preview/
 _preview/
+
+# Photo-reel skill: portable ffmpeg and any dropped audio stay local
+.cursor/skills/make-photo-reel/bin/**
+!.cursor/skills/make-photo-reel/bin/README.md
+.cursor/skills/make-photo-reel/music/*.mp3
+.cursor/skills/make-photo-reel/music/*.m4a
+.cursor/skills/make-photo-reel/music/*.wav
+.cursor/skills/make-photo-reel/music/*.flac

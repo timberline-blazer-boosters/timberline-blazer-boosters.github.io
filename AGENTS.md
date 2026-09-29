@@ -28,6 +28,7 @@ Public Jekyll site on GitHub Pages. **Not** a Business Central / AL repo — ign
 | `add-document` | PDF on `/documents/` |
 | `publish-pages` | Commit / pull / push to `main` |
 | `verify-site` | Browser-check after UI changes |
+| `make-photo-reel` | 9:16 Instagram reel from still photos (Ken Burns). Add **High Hopes** in Instagram, do not bake in commercial audio. |
 
 Prefer whitelist plugins (`jekyll-sitemap`, `jekyll-redirect-from`) over a custom Pages build.
 

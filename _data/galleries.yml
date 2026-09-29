@@ -22,6 +22,9 @@ groups:
       - slug: football-4
         title: C vs Enumclaw
         token: pu06zykby6
+      - slug: football-5
+        title: V vs Peninsula
+        token: wt259p93u7
   - slug: volleyball-2627
     title: Volleyball 26-27
     albums:
@@ -58,3 +61,6 @@ groups:
       - slug: band-1
         title: 9/12 Football
         token: c20pz5ibui
+      - slug: band-2
+        title: 9/25 Football
+        token: j4lpf1rw0f
