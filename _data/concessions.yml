@@ -1,0 +1,36 @@
+# Venue station lists. Events (one row per concession night) live in
+# concessions-events.csv so Make can replace that file from the Google Sheet.
+venues:
+  stadium:
+    title: Stadium
+    stations:
+      - id: grill
+        title: Grill / hot dogs
+        need: 2
+      - id: popcorn
+        title: Popcorn & nachos
+        need: 2
+      - id: candy
+        title: Candy & drinks
+        need: 2
+      - id: register
+        title: Register
+        need: 2
+      - id: adult
+        title: Adult lead
+        need: 1
+  gym:
+    title: Gym
+    stations:
+      - id: window
+        title: Concession window
+        need: 2
+      - id: hot
+        title: Hot drinks
+        need: 1
+      - id: snacks
+        title: Candy & snacks
+        need: 2
+      - id: adult
+        title: Adult lead
+        need: 1

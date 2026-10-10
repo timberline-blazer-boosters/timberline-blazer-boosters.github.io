@@ -25,6 +25,15 @@ groups:
       - slug: football-5
         title: V vs Peninsula
         token: wt259p93u7
+      - slug: football-6
+        title: V vs North Thurston (HOCO)
+        token: o0382a0zr0
+      - slug: football-7
+        title: JV vs Olympic
+        token: j4plxjsdfw
+      - slug: football-8
+        title: V vs River Ridge
+        token: nfrpx2fwza
   - slug: volleyball-2627
     title: Volleyball 26-27
     albums:
@@ -43,6 +52,15 @@ groups:
       - slug: volleyball-5
         title: Timberline Tournament
         token: tbfh80t74v
+      - slug: volleyball-6
+        title: JV vs Mt Tahoma
+        token: uyg11tff4r
+      - slug: volleyball-7
+        title: V vs Mt Tahoma
+        token: m5dkc7a3sx
+      - slug: volleyball-8
+        title: V vs Capital
+        token: 3mvgm8o9r0
   - slug: soccer-2627
     title: Soccer 26-27
     albums:

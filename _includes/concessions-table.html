@@ -1,0 +1,68 @@
+{% assign concession_rows = site.data.concessions-events %}
+{% assign venue_map = site.data.concessions.venues %}
+{% assign today = "now" | date: "%Y-%m-%d" %}
+{% assign listed = 0 %}
+
+<div class="concessions-block" id="concessions">
+  <h2>Concession volunteer nights</h2>
+  <p>Games below have a booster concession stand. Stadium and gym use different station lists. We need one adult lead per night (a second adult is optional). Volunteer signup will use this list once the booking form is live.</p>
+
+  <div class="concessions-table-wrap">
+    <table class="concessions-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Event</th>
+          <th>Where</th>
+          <th>Time</th>
+          <th>Adult leads</th>
+          <th>Stations</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in concession_rows %}
+          {% assign show_row = true %}
+          {% if event.slug == nil or event.slug == "" %}
+            {% assign show_row = false %}
+          {% endif %}
+          {% assign is_pub = event.published | append: "" | downcase %}
+          {% if is_pub == "false" or is_pub == "0" or is_pub == "no" %}
+            {% assign show_row = false %}
+          {% endif %}
+          {% if event.date and event.date < today %}
+            {% assign show_row = false %}
+          {% endif %}
+          {% if show_row %}
+            {% assign listed = listed | plus: 1 %}
+            {% assign venue_key = event.venue | downcase | strip %}
+            {% assign venue = venue_map[venue_key] %}
+            {% assign venue_title = venue.title | default: event.venue %}
+            {% assign adult_need = event.adult_leads_need | default: 1 %}
+            {% assign adult_max = event.adult_leads_max | default: 2 %}
+            {% assign station_labels = "" %}
+            {% for station in venue.stations %}
+              {% if station.id != "adult" %}
+                {% if station_labels != "" %}
+                  {% assign station_labels = station_labels | append: ", " %}
+                {% endif %}
+                {% assign station_labels = station_labels | append: station.title %}
+              {% endif %}
+            {% endfor %}
+            <tr>
+              <td data-label="Date">{{ event.date | date: "%a %b %d" }}</td>
+              <td data-label="Event">{{ event.title }}</td>
+              <td data-label="Where">{{ venue_title }}</td>
+              <td data-label="Time">{{ event.start }}–{{ event.end }}</td>
+              <td data-label="Adult leads">{{ adult_need }} (max {{ adult_max }})</td>
+              <td data-label="Stations">{{ station_labels }}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if listed == 0 %}
+  <p class="concessions-empty">No upcoming concession nights are listed yet. Officers add a row on the Events sheet when a game has a stand.</p>
+  {% endif %}
+</div>

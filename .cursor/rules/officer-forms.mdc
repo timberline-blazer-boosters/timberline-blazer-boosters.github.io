@@ -20,6 +20,24 @@ Do not reuse the compose hook on `/update/`, the update hook on compose, or eith
 
 Make responds with 302 to `/compose/thanks/`, `/compose/error/`, `/update/thanks/`, `/update/error/`. Keep those permalinks.
 
+## Concessions (Make + Sheet)
+
+Do **not** reuse compose, update, or contact endpoints. Create a new Make webhook when the signup form is added. Officers add nights on the **Events** tab; volunteers land on **Signups**. Never commit volunteer names or emails.
+
+Events tab / `_data/concessions-events.csv` headers:
+
+`slug,title,sport,date,start,end,venue,adult_leads_need,adult_leads_max,published,notes`
+
+- `venue` is `stadium` or `gym` (station lists live in `_data/concessions.yml`, not the sheet row)
+- `adult_leads_need` default `1`; `adult_leads_max` default `2`
+- `date` is `YYYY-MM-DD`; `published` is `true` to show on `/events/#concessions`
+
+Signup form fields (when the form is wired):
+
+`event_slug, station_id, adult_name, email, phone, students, comment, consent, secret`
+
+Make compares `secret` to a concessions password in Make (typed in the form). 302 to `/events/` thanks/error permalinks once those pages exist.
+
 ## Compose (`assets/js/compose-crop.js`)
 
 Browser crops/converts photos. Make must **not** re-crop, convert JPEGs, or remux the MP4.

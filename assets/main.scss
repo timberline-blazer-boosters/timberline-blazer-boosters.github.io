@@ -75,6 +75,69 @@ img {
   padding-right: 1.5rem;
 }
 
+.concessions-block {
+  margin: 2.5rem 0 1rem;
+}
+
+.concessions-block h2 {
+  margin-bottom: 0.5rem;
+}
+
+.concessions-table-wrap {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.concessions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.concessions-table th,
+.concessions-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.65rem 0.85rem 0.65rem 0;
+}
+
+.concessions-table th {
+  border-bottom: 1px solid #ccc;
+}
+
+.concessions-table td {
+  border-bottom: 1px solid #eee;
+}
+
+.concessions-empty {
+  margin: 0.5rem 0 0;
+}
+
+@media (max-width: 600px) {
+  .concessions-table thead {
+    display: none;
+  }
+
+  .concessions-table tr {
+    display: block;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .concessions-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 0;
+    padding: 0.2rem 0;
+  }
+
+  .concessions-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    flex: 0 0 7rem;
+  }
+}
+
 .contact-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
