@@ -26,17 +26,21 @@ Do **not** reuse compose, update, or contact endpoints. Create a new Make webhoo
 
 Events tab / `_data/concessions-events.csv` headers:
 
-`slug,title,sport,date,start,end,venue,adult_leads_need,adult_leads_max,published,notes`
+`slug,title,sport,date,start,end,venue,roster_need,published,notes`
 
 - `venue` is `stadium` or `gym` (station lists live in `_data/concessions.yml`, not the sheet row)
-- `adult_leads_need` default `1`; `adult_leads_max` default `2`
+- `roster_need` is the station slot total for that venue (stadium `9`, gym `6`). A night is closed when Signups people (adults + students) reach `roster_need`. Volunteers do **not** pick a station at signup.
 - `date` is `YYYY-MM-DD`; `published` is `true` to show on `/events/#concessions`
+
+Signups tab (private sheet; never commit names or emails):
+
+`timestamp,event_slug,adult_name,students,email,phone,comment`
 
 Signup form fields (when the form is wired):
 
-`event_slug, station_id, adult_name, email, phone, students, comment, consent, secret`
+`event_slug, adult_name, students, email, phone, comment, secret`
 
-Make compares `secret` to a concessions password in Make (typed in the form). 302 to `/events/` thanks/error permalinks once those pages exist.
+Make compares `secret` to a concessions password in Make (typed in the form). 302 to `/events/concessions-thanks/` or `/events/concessions-error/`. Reject new signups when the night is closed.
 
 ## Compose (`assets/js/compose-crop.js`)
 
