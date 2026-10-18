@@ -61,6 +61,9 @@ groups:
       - slug: volleyball-8
         title: V vs Capital
         token: 3mvgm8o9r0
+      - slug: volleyball-9
+        title: V vs River Ridge
+        token: qng2bq2xt3
   - slug: soccer-2627
     title: Soccer 26-27
     albums:
@@ -76,6 +79,15 @@ groups:
       - slug: soccer-4
         title: V vs Mt Tahoma
         token: 7cvu54q856
+      - slug: soccer-5
+        title: Seniors Night
+        token: y5g8supyu7
+      - slug: soccer-6
+        title: JV vs Lakes
+        token: 4f5dkm1hvv
+      - slug: soccer-7
+        title: V vs Lakes
+        token: 8qsy40l3z6
   - slug: band-and-crowd
     title: Band and Crowd
     albums:
