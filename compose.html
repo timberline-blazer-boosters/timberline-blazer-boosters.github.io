@@ -18,24 +18,20 @@ permalink: /compose/
 
   1. Webhook + file uploads. Respond = from Webhook response module. No x-make-apikey.
   2. Filter: secret equals COMPOSE_SECRET. Else 302 → /compose/error/
-  3. GitHub: commit site files from the uploaded media (first JPEG or skip video poster).
-  4. website_only == 1: skip social. 302 → /compose/thanks/
-  5. Else wait for public URLs, then Graph:
-       IMAGE:    /media image_url + caption + alt_text → media_publish
-       CAROUSEL: /media each item is_carousel_item=true, then /media media_type=CAROUSEL children=ids → media_publish
-       REELS:    /media media_type=REELS video_url (or resumable) → wait status FINISHED → media_publish
-     caption = social_caption or body; append hashtags from tags if needed.
-     Skip RSS→Instagram for these items.
-  6. Success 302 → /compose/thanks/
+  3. Photos: GitHub commits JPEGs + news markdown. Do not convert or resize in Make.
+  4. One photo: RSS on /feed.xml posts Facebook (link) and Instagram (photo).
+  5. Carousel: Instagram CreateCarouselPhoto after Pages can serve the JPEGs. RSS still posts the Facebook link and skips Instagram. Tag carousel.
+  6. Reel: no news post. Commit assets/videos/compose-reel-{timestamp}.mp4, Facebook Publish a Reel from the file, wait, Instagram CreateAReelPost from the public URL, then DELETE the GitHub file. Do not remux.
+  7. Success 302 → /compose/thanks/
 -->
 
 <div class="contact-form-block">
   <div class="contact-form-header">
     <h2>Compose a post</h2>
-    <p>Officers: pick one photo, a carousel, or an MP4 reel. This page converts photos to Instagram JPEGs and sends tags with the package. Unless you check website-only, Make can publish that package to Instagram and Facebook. Tokens stay in Make.</p>
+    <p>Officers: crop one photo, pick several for a swipe post, or drop a finished MP4 reel (with audio already in the file). Photos become a news post. A reel goes to Facebook and Instagram only — it is not added to the website. Instagram uses the Facebook Page login in Make, not a developer app.</p>
   </div>
 
-  <form id="compose-form" class="contact-form" action="https://hook.us2.make.com/fde4havi9m47gn7gvnv39ulwdhfpb8qk" method="POST" enctype="multipart/form-data">
+  <form id="compose-form" class="contact-form" action="https://hook.us2.make.com/1ce37peer6a22dohhxgrci4yhkgh8ju4" method="POST" enctype="multipart/form-data">
     <div class="contact-field">
       <label for="compose-title">Title <span class="req">(required)</span></label>
       <input id="compose-title" type="text" name="title" required maxlength="120" autocomplete="off">
@@ -117,7 +113,7 @@ permalink: /compose/
       <div class="contact-field">
         <label for="compose-images">Photos <span class="req">(2–10, required)</span></label>
         <input id="compose-images" type="file" name="images" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple>
-        <p class="compose-drop-hint">Each photo is converted to a 1080×1080 JPEG (Instagram carousel default). First photo sets the crop.</p>
+        <p class="compose-drop-hint">Choose 2–10 photos. The page squares each one automatically. You do not crop them one by one.</p>
         <div class="compose-thumbs" id="compose-thumbs"></div>
       </div>
     </div>
@@ -126,7 +122,7 @@ permalink: /compose/
       <div class="contact-field">
         <label for="compose-video">MP4 video <span class="req">(required)</span></label>
         <input id="compose-video" type="file" name="video" accept=".mp4,video/mp4">
-        <p class="compose-drop-hint">Send an MP4 reel as-is. The browser does not convert video. Instagram does not use alt text on Reels.</p>
+        <p class="compose-drop-hint">Drop a finished 9:16 MP4 (keep it under about 80 MB). Audio should already be in the file. This does not create a news post. Make hosts the file only long enough for Instagram to fetch it, then deletes it from the site.</p>
         <p id="compose-video-name" class="compose-drop-hint"></p>
       </div>
     </div>
@@ -136,7 +132,7 @@ permalink: /compose/
       <input id="compose-secret" type="password" name="secret" required autocomplete="current-password">
     </div>
 
-    <div class="contact-field compose-website-only">
+    <div class="contact-field compose-website-only" id="compose-website-only-wrap">
       <label class="compose-check-label" for="compose-website-only">
         <input id="compose-website-only" type="checkbox" name="website_only" value="1">
         <span>Website only — do not send this post to Instagram or Facebook</span>
@@ -150,7 +146,7 @@ permalink: /compose/
 </div>
 
 <h2>What Make receives</h2>
-<p><strong>One photo:</strong> 1080×1350 JPEG, caption, alt text, tags. <strong>Carousel:</strong> 2–10 JPEGs at 1080×1080, caption, tags, <code>media_type=CAROUSEL</code>. <strong>Reel:</strong> the MP4 you chose, caption, tags, <code>media_type=REELS</code> (no alt text). Check <strong>Website only</strong> to skip Instagram and Facebook.</p>
+<p><strong>One photo:</strong> crop it in the 4:5 frame. Make commits it; Facebook and Instagram follow from the news feed. <strong>Multiple photos:</strong> pick 2–10 pictures. The site shows them; Instagram gets a swipe post; Facebook gets the blog link. <strong>MP4 reel:</strong> Facebook and Instagram only — no news post. Check <strong>Website only</strong> on photo posts to skip Instagram and Facebook.</p>
 <p>If a post with that title already exists for today, change the title and try again. Do not overwrite posts.</p>
 
 <script src="{{ '/assets/js/compose-crop.js' | relative_url }}"></script>

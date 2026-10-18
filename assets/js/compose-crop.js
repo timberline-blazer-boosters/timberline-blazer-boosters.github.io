@@ -27,6 +27,9 @@
   var panelImage = document.getElementById("compose-panel-image");
   var panelCarousel = document.getElementById("compose-panel-carousel");
   var panelReel = document.getElementById("compose-panel-reel");
+  var websiteOnlyWrap = document.getElementById("compose-website-only-wrap");
+  var websiteOnlyBox = document.getElementById("compose-website-only");
+  var bodyField = document.getElementById("compose-body");
 
   if (!form || !input || !drop || !frame || !img || !zoom) return;
 
@@ -286,6 +289,9 @@
     if (imagesInput) imagesInput.required = kind === "carousel";
     if (videoInput) videoInput.required = kind === "reel";
     if (altField) altField.hidden = kind === "reel";
+    if (bodyField) bodyField.required = kind !== "reel";
+    if (websiteOnlyWrap) websiteOnlyWrap.hidden = kind === "reel";
+    if (kind === "reel" && websiteOnlyBox) websiteOnlyBox.checked = false;
   }
 
   function loadImageFile(file, done) {

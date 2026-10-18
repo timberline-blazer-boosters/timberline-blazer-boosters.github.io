@@ -57,9 +57,12 @@ Webhook: concessions signup hook already in `events-concessions-signup.html`; ca
 
 Browser crops/converts photos. Make must **not** re-crop, convert JPEGs, or remux the MP4.
 
-- `media_kind`: `image` (one `image`, 1080×1350) · `carousel` (`images`, 2–10 at 1080×1080) · `reel` (`video` MP4 as-is)
-- Keep `media_type`, `tags`, `website_only`, `social_caption`, `alt_text`
-- Duplicate title the same day → tell the officer to change the title; do not overwrite
+- Live path: one photo (`image`, 1080×1350), carousel (`images`, 2–10 at 1080×1080), or reel (`video` MP4 as-is). Do not Graph-post, and do not create a Meta developer app. Do not use PhotoPrism for reels.
+- One photo: RSS on `https://timberlineblazerboosters.org/feed.xml` uses the existing Facebook connection (Page + Instagram).
+- Carousel: compose posts Instagram with `CreateCarouselPhoto` after the JPEGs are on the site. RSS still posts the Facebook link and skips Instagram (`carousel` tag).
+- Reel: no `_posts` markdown. Commit a unique `assets/videos/compose-reel-{timestamp}.mp4`, Facebook `uploadAReel` from the webhook file, wait for Pages, Instagram `CreateAReelPost` from that public URL, then **DELETE** the GitHub file. Do not overwrite a shared filename. Do not remux.
+- `website_only=1` applies to photo posts only (tag `website-only`). Duplicate photo title the same day → change the title; do not overwrite.
+- Do not finish the unused Graph HTTP scenario. Do not point `/compose/` at that webhook.
 
 ## Update lists
 
