@@ -112,6 +112,61 @@ img {
   margin: 0.5rem 0 0;
 }
 
+.concessions-signup-btn {
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.concessions-full {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.concessions-event-summary {
+  margin: 0 0 1.25rem;
+  font-weight: 600;
+}
+
+.concessions-closed {
+  margin: 0 0 1.25rem;
+}
+
+.concessions-event-list {
+  margin: 0 0 1.5rem;
+  padding-left: 1.2rem;
+}
+
+.concessions-help {
+  display: block;
+  margin-top: 0.35rem;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.contact-form input[type="number"],
+.contact-form input[type="tel"] {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #c6c6c6;
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+  line-height: 1.4;
+}
+
+.contact-form input[type="number"]:focus,
+.contact-form input[type="tel"]:focus {
+  outline: none;
+  border-color: #424242;
+  box-shadow: 0 0 0 3px rgba(66, 66, 66, 0.12);
+}
+
+.contact-form textarea#signup-comment {
+  min-height: 6rem;
+}
+
 @media (max-width: 600px) {
   .concessions-table thead {
     display: none;
@@ -135,6 +190,15 @@ img {
     content: attr(data-label);
     font-weight: 600;
     flex: 0 0 7rem;
+  }
+
+  .concessions-table td.concessions-signup-cell {
+    display: block;
+    padding-bottom: 0.55rem;
+  }
+
+  .concessions-table td.concessions-signup-cell::before {
+    content: none;
   }
 }
 

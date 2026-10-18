@@ -22,25 +22,35 @@ Make responds with 302 to `/compose/thanks/`, `/compose/error/`, `/update/thanks
 
 ## Concessions (Make + Sheet)
 
-Do **not** reuse compose, update, or contact endpoints. Create a new Make webhook when the signup form is added. Officers add nights on the **Events** tab; volunteers land on **Signups**. Never commit volunteer names or emails.
+Do **not** reuse compose, update, or contact endpoints. Officers add nights on the **Events** tab; volunteers land on **Signups**. Never commit volunteer names or emails.
 
 Events tab / `_data/concessions-events.csv` headers:
 
-`slug,title,sport,date,start,end,venue,roster_need,published,notes`
+`slug,title,sport,date,start,end,venue,roster_need,published,notes,roster_filled,spots_left`
 
 - `venue` is `stadium` or `gym` (station lists live in `_data/concessions.yml`, not the sheet row)
-- `roster_need` is the station slot total for that venue (stadium `9`, gym `6`). A night is closed when Signups people (adults + students) reach `roster_need`. Volunteers do **not** pick a station at signup.
+- `roster_need` is the station slot total (stadium `9`, gym `6`). Closed when Signups people (each adult + their `students` count) reach `roster_need`.
+- `roster_filled` / `spots_left` are sheet formulas, not typed. Publish by running the Make scenario (on-demand; nights are known months ahead).
 - `date` is `YYYY-MM-DD`; `published` is `true` to show on `/events/#concessions`
+- Volunteers do **not** pick a station at signup. No password on volunteer signup.
 
 Signups tab (private sheet; never commit names or emails):
 
-`timestamp,event_slug,adult_name,students,email,phone,comment`
+`timestamp,event_slug,adult_name,students,email,phone,comment,consent,people,token,action`
 
-Signup form fields (when the form is wired):
+- Signup appends `action=signup` and `people` = 1 + `students` (adult plus guests).
+- Volunteer self-cancel uses `/events/concessions-cancel/?token=` and appends `action=cancel` with **negative** `people` (do not delete the original row).
+- `roster_filled` is `SUMIF` of Signups `people` for that `event_slug`. Publish after each signup/cancel so `/events/#concessions` spots left stay current.
 
-`event_slug, adult_name, students, email, phone, comment, secret`
+Signup form fields:
 
-Make compares `secret` to a concessions password in Make (typed in the form). 302 to `/events/concessions-thanks/` or `/events/concessions-error/`. Reject new signups when the night is closed.
+`action, event_slug, adult_name, students, email, phone, comment` plus honeypot `company`
+
+Cancel form fields:
+
+`action, token` plus honeypot `company`
+
+Webhook: concessions signup hook already in `events-concessions-signup.html`; cancel uses the dedicated cancel hook in `events-concessions-cancel.html`. Do **not** reuse compose, update, or contact endpoints. No password on volunteer signup. Officers add nights on the private Events tab; compose/update keep their own secrets. 302 to `/events/concessions-thanks/` (`?token=` after signup, `?status=cancelled` after cancel) or `/events/concessions-error/`. Reject new signups when the night is closed. Keep `/events/concessions-signup/` and `/events/concessions-cancel/` out of `header_pages`.
 
 ## Compose (`assets/js/compose-crop.js`)
 

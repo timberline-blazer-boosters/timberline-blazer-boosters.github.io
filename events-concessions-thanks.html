@@ -1,9 +1,19 @@
 ---
 layout: page
-title: Shift reserved
+title: You’re on the roster
 permalink: /events/concessions-thanks/
 ---
 
-<p>Your concession shift was received. An officer will confirm the night’s lineup. Thank you for helping the Blazers.</p>
+<p id="thanks-signed">Your concession signup was saved. Spots left on the events list update after the sheet publishes. Thank you for helping the Blazers.</p>
+
+<p id="thanks-cancelled" hidden>You’re off that night’s roster. Spots left will go back up after the sheet publishes.</p>
+
+<div id="thanks-cancel-wrap" hidden>
+  <p>Keep this link to cancel yourself later. It does not need a password.</p>
+  <p><a id="thanks-cancel-link" href="{{ '/events/concessions-cancel/' | relative_url }}">Cancel this signup</a></p>
+  <p><a id="thanks-mailto" hidden>Email this cancel link to yourself</a></p>
+</div>
 
 <p><a href="{{ '/events/#concessions' | relative_url }}">Back to concession nights</a></p>
+
+<script src="{{ '/assets/js/concessions-signup.js' | relative_url }}"></script>

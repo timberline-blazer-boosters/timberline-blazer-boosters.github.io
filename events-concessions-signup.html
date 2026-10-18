@@ -1,0 +1,96 @@
+---
+layout: page
+title: Concession volunteer signup
+permalink: /events/concessions-signup/
+description: Sign up to volunteer at a Timberline Blazers booster concession stand.
+---
+
+<div class="contact-form-block">
+  <div class="contact-form-header">
+    <h2>Concession signup</h2>
+    <p id="signup-intro">Pick a night from the events list, or open this page from a Sign up button. One adult is the contact; you can bring students. You do not pick a station here. A night closes when the roster covers every station slot.</p>
+  </div>
+
+  <p id="signup-event-summary" class="concessions-event-summary" hidden></p>
+  <p id="signup-closed" class="concessions-closed" hidden>This night is full. Choose another listed night or check back if someone cancels.</p>
+  <p id="signup-missing" class="concessions-closed" hidden>Choose a night from the list below. Each Sign up button opens this form for that game.</p>
+
+  <ul id="signup-event-list" class="concessions-event-list" hidden></ul>
+
+  <form id="concessions-signup-form" class="contact-form" action="https://hook.us2.make.com/ulsndk7fia5rei6kt963e2dt82tbem2g" method="POST" hidden>
+    <input type="hidden" name="action" value="signup">
+    <input type="hidden" name="event_slug" id="signup-event-slug" value="">
+    <input type="text" name="company" tabindex="-1" autocomplete="off" class="contact-honey" aria-hidden="true">
+
+    <div class="contact-field">
+      <label for="signup-adult">Adult name <span class="req">(required)</span></label>
+      <input id="signup-adult" type="text" name="adult_name" required maxlength="80" autocomplete="name">
+    </div>
+
+    <div class="contact-name-row">
+      <div class="contact-field">
+        <label for="signup-email">Email <span class="req">(required)</span></label>
+        <input id="signup-email" type="email" name="email" required autocomplete="email">
+      </div>
+      <div class="contact-field">
+        <label for="signup-phone">Phone</label>
+        <input id="signup-phone" type="tel" name="phone" maxlength="30" autocomplete="tel">
+      </div>
+    </div>
+
+    <div class="contact-field">
+      <label for="signup-students">Students with you</label>
+      <input id="signup-students" type="number" name="students" min="0" max="8" step="1" value="0" inputmode="numeric">
+      <span class="concessions-help">Counts toward the roster with you. Use 0 if you are coming alone.</span>
+    </div>
+
+    <div class="contact-field">
+      <label for="signup-comment">Comment</label>
+      <textarea id="signup-comment" name="comment" rows="3" maxlength="500" placeholder="Allergies, arrival time, or other notes"></textarea>
+    </div>
+
+    <div class="contact-field">
+      <button type="submit">Join the roster</button>
+    </div>
+  </form>
+</div>
+
+<script type="application/json" id="concessions-events-json">
+{
+{%- assign today = "now" | date: "%Y-%m-%d" -%}
+{%- assign first_json = true -%}
+{%- for event in site.data.concessions-events -%}
+  {%- assign show_row = true -%}
+  {%- if event.slug == nil or event.slug == "" -%}
+    {%- assign show_row = false -%}
+  {%- endif -%}
+  {%- assign is_pub = event.published | append: "" | downcase -%}
+  {%- if is_pub == "false" or is_pub == "0" or is_pub == "no" -%}
+    {%- assign show_row = false -%}
+  {%- endif -%}
+  {%- if event.date and event.date < today -%}
+    {%- assign show_row = false -%}
+  {%- endif -%}
+  {%- if show_row -%}
+    {%- assign roster_need = event.roster_need | plus: 0 -%}
+    {%- assign spots_left = event.spots_left -%}
+    {%- if spots_left == nil or spots_left == "" -%}
+      {%- assign filled = event.roster_filled | plus: 0 -%}
+      {%- assign spots_left = roster_need | minus: filled -%}
+    {%- endif -%}
+    {%- unless first_json -%},{%- endunless -%}
+    {%- assign first_json = false %}
+  {{ event.slug | jsonify }}: {
+    "title": {{ event.title | jsonify }},
+    "date": {{ event.date | jsonify }},
+    "start": {{ event.start | jsonify }},
+    "end": {{ event.end | jsonify }},
+    "venue": {{ event.venue | jsonify }},
+    "spots_left": {{ spots_left | plus: 0 }},
+    "roster_need": {{ roster_need }}
+  }
+  {%- endif -%}
+{%- endfor %}
+}
+</script>
+<script src="{{ '/assets/js/concessions-signup.js' | relative_url }}"></script>

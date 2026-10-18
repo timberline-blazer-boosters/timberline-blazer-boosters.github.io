@@ -1,0 +1,29 @@
+---
+layout: page
+title: Cancel concession signup
+permalink: /events/concessions-cancel/
+description: Cancel your Timberline Blazers booster concession volunteer signup.
+---
+
+<div class="contact-form-block">
+  <div class="contact-form-header">
+    <h2>Cancel signup</h2>
+    <p>Use the link from your confirmation page to take yourself off the roster. That adds a negative people row on the Signups sheet and republishes spots left on the events list.</p>
+  </div>
+
+  <p id="cancel-missing" class="concessions-closed" hidden>This cancel link is missing its token. Open the link from your confirmation page or email.</p>
+
+  <form id="concessions-cancel-form" class="contact-form" action="https://hook.us2.make.com/035fdbh1676ijalsnp66tket9qwfn3n2" method="POST" hidden>
+    <input type="hidden" name="action" value="cancel">
+    <input type="hidden" name="token" id="cancel-token" value="">
+    <input type="text" name="company" tabindex="-1" autocomplete="off" class="contact-honey" aria-hidden="true">
+
+    <p>This removes you and anyone you listed as students from that night’s count. It does not pick a replacement.</p>
+
+    <div class="contact-field">
+      <button type="submit" id="cancel-submit">Take me off the roster</button>
+    </div>
+  </form>
+</div>
+
+<script src="{{ '/assets/js/concessions-signup.js' | relative_url }}"></script>
