@@ -8,7 +8,7 @@ description: Sign up to volunteer at a Timberline Blazers booster concession sta
 <div class="contact-form-block">
   <div class="contact-form-header">
     <h2>Concession signup</h2>
-    <p id="signup-intro">Pick a night from the events list, or open this page from a Sign up button. One adult is the contact; you can bring students. You do not pick a station here. A night closes when the roster covers every station slot.</p>
+    <p id="signup-intro">Pick a night from the events list, or open this page from a Sign up button. You can be a student or an adult. Add a line for each extra person so we have their name. Stations are assigned when you arrive. A night closes when the roster is full.</p>
   </div>
 
   <p id="signup-event-summary" class="concessions-event-summary" hidden></p>
@@ -20,12 +20,30 @@ description: Sign up to volunteer at a Timberline Blazers booster concession sta
   <form id="concessions-signup-form" class="contact-form" action="https://hook.us2.make.com/ulsndk7fia5rei6kt963e2dt82tbem2g" method="POST" hidden>
     <input type="hidden" name="action" value="signup">
     <input type="hidden" name="event_slug" id="signup-event-slug" value="">
+    <input type="hidden" name="adult_name" id="signup-adult-name" value="">
+    <input type="hidden" name="adult" id="signup-adult-flag" value="false">
+    <input type="hidden" name="students" id="signup-students" value="0">
+    <input type="hidden" name="student_names" id="signup-student-names" value="">
+    <input type="hidden" name="people" id="signup-people" value="1">
     <input type="text" name="company" tabindex="-1" autocomplete="off" class="contact-honey" aria-hidden="true">
 
-    <div class="contact-field">
-      <label for="signup-adult">Adult name <span class="req">(required)</span></label>
-      <input id="signup-adult" type="text" name="adult_name" required maxlength="80" autocomplete="name">
+    <div id="signup-people-list" class="concessions-people-list">
+      <div class="concessions-person">
+        <div class="contact-field">
+          <label>Your name <span class="req">(required)</span></label>
+          <input type="text" class="person-name" maxlength="80" autocomplete="name" required>
+        </div>
+        <label class="concessions-adult-check">
+          <input type="checkbox" class="person-adult">
+          <span>I am an adult</span>
+        </label>
+      </div>
     </div>
+
+    <p>
+      <button type="button" id="signup-add-person" class="outline-button concessions-add-person">Add another student</button>
+    </p>
+    <span class="concessions-help">Each extra line is another person on the roster. Check Adult if that person is an adult.</span>
 
     <div class="contact-name-row">
       <div class="contact-field">
@@ -39,12 +57,6 @@ description: Sign up to volunteer at a Timberline Blazers booster concession sta
     </div>
 
     <div class="contact-field">
-      <label for="signup-students">Students with you</label>
-      <input id="signup-students" type="number" name="students" min="0" max="8" step="1" value="0" inputmode="numeric">
-      <span class="concessions-help">Counts toward the roster with you. Use 0 if you are coming alone.</span>
-    </div>
-
-    <div class="contact-field">
       <label for="signup-comment">Comment</label>
       <textarea id="signup-comment" name="comment" rows="3" maxlength="500" placeholder="Allergies, arrival time, or other notes"></textarea>
     </div>
@@ -54,6 +66,20 @@ description: Sign up to volunteer at a Timberline Blazers booster concession sta
     </div>
   </form>
 </div>
+
+<template id="signup-person-template">
+  <div class="concessions-person concessions-person-extra">
+    <div class="contact-field">
+      <label>Student name <span class="req">(required)</span></label>
+      <input type="text" class="person-name" maxlength="80" autocomplete="off" required>
+    </div>
+    <label class="concessions-adult-check">
+      <input type="checkbox" class="person-adult">
+      <span>Adult</span>
+    </label>
+    <button type="button" class="concessions-remove-person">Remove</button>
+  </div>
+</template>
 
 <script type="application/json" id="concessions-events-json">
 {

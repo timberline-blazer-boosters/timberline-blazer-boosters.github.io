@@ -4,6 +4,7 @@
   var cancelForm = document.getElementById("concessions-cancel-form");
   var params = new URLSearchParams(window.location.search);
   var events = {};
+  var maxPeople = 9;
 
   if (eventsEl) {
     try {
@@ -40,15 +41,62 @@
     var closed = document.getElementById("signup-closed");
     var missing = document.getElementById("signup-missing");
     var list = document.getElementById("signup-event-list");
-    var adult = document.getElementById("signup-adult");
     var email = document.getElementById("signup-email");
+    var peopleList = document.getElementById("signup-people-list");
+    var addBtn = document.getElementById("signup-add-person");
+    var personTemplate = document.getElementById("signup-person-template");
     var slug = params.get("event") || "";
     var event = events[slug];
 
+    function personRows() {
+      return peopleList ? peopleList.querySelectorAll(".concessions-person") : [];
+    }
+
+    function addPersonRow() {
+      if (!personTemplate || !peopleList || personRows().length >= maxPeople) return;
+      var node = personTemplate.content.firstElementChild.cloneNode(true);
+      var remove = node.querySelector(".concessions-remove-person");
+      if (remove) {
+        remove.addEventListener("click", function () {
+          node.remove();
+        });
+      }
+      peopleList.appendChild(node);
+      var nameInput = node.querySelector(".person-name");
+      if (nameInput) nameInput.focus();
+    }
+
+    if (addBtn) {
+      addBtn.addEventListener("click", addPersonRow);
+    }
+
     form.addEventListener("submit", function () {
+      var rows = personRows();
+      var extras = [];
+      var firstName = "";
+      var firstAdult = false;
+      for (var i = 0; i < rows.length; i += 1) {
+        var nameInput = rows[i].querySelector(".person-name");
+        var adultInput = rows[i].querySelector(".person-adult");
+        var name = nameInput ? String(nameInput.value || "").trim() : "";
+        if (!name) continue;
+        var isAdult = !!(adultInput && adultInput.checked);
+        if (i === 0) {
+          firstName = name;
+          firstAdult = isAdult;
+        } else {
+          extras.push(isAdult ? name + " (adult)" : name);
+        }
+      }
+      var people = (firstName ? 1 : 0) + extras.length;
+      document.getElementById("signup-adult-name").value = firstName;
+      document.getElementById("signup-adult-flag").value = firstAdult ? "true" : "false";
+      document.getElementById("signup-students").value = String(extras.length);
+      document.getElementById("signup-student-names").value = extras.join("\n");
+      document.getElementById("signup-people").value = String(people || 1);
       try {
         sessionStorage.setItem("concessionsSignupEmail", email ? email.value : "");
-        sessionStorage.setItem("concessionsSignupName", adult ? adult.value : "");
+        sessionStorage.setItem("concessionsSignupName", firstName);
         sessionStorage.setItem("concessionsSignupEvent", slug);
       } catch (err) {}
     });

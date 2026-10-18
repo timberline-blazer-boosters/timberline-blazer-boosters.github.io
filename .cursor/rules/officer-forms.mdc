@@ -28,23 +28,24 @@ Events tab / `_data/concessions-events.csv` headers:
 
 `slug,title,sport,date,start,end,venue,roster_need,published,notes,roster_filled,spots_left`
 
-- `venue` is `stadium` or `gym` (station lists live in `_data/concessions.yml`, not the sheet row)
-- `roster_need` is the station slot total (stadium `9`, gym `6`). Closed when Signups people (each adult + their `students` count) reach `roster_need`.
-- `roster_filled` / `spots_left` are sheet formulas, not typed. Publish by running the Make scenario (on-demand; nights are known months ahead).
+- `venue` is `stadium` or `gym` (officer station lists live in `_data/concessions.yml`; do not list stations on the public events table or signup form)
+- `roster_need` is the slot total (stadium `9`, gym `6`). Closed when Signups `people` reach `roster_need`.
+- `roster_filled` / `spots_left` are sheet formulas, not typed. Publish after each signup/cancel so `/events/#concessions` spots left stay current.
 - `date` is `YYYY-MM-DD`; `published` is `true` to show on `/events/#concessions`
-- Volunteers do **not** pick a station at signup. No password on volunteer signup.
+- Volunteers do **not** pick a station at signup. Stations are assigned on arrival. No password on volunteer signup.
 
 Signups tab (private sheet; never commit names or emails):
 
-`timestamp,event_slug,adult_name,students,email,phone,comment,consent,people,token,action`
+`timestamp,event_slug,adult_name,students,email,phone,comment,consent,people,token,action,adult,student_names`
 
-- Signup appends `action=signup` and `people` = 1 + `students` (adult plus guests).
+- `adult_name` is the person filling the form (student or adult). `adult` is `true`/`false`.
+- Extra people are extra form lines. `student_names` is one name per line (`Name (adult)` if that extra person is an adult). `students` is that extra-line count. `people` is everyone on the signup.
 - Volunteer self-cancel uses `/events/concessions-cancel/?token=` and appends `action=cancel` with **negative** `people` (do not delete the original row).
-- `roster_filled` is `SUMIF` of Signups `people` for that `event_slug`. Publish after each signup/cancel so `/events/#concessions` spots left stay current.
+- `roster_filled` is `SUMIF` of Signups `people` for that `event_slug`.
 
 Signup form fields:
 
-`action, event_slug, adult_name, students, email, phone, comment` plus honeypot `company`
+`action, event_slug, adult_name, adult, students, student_names, people, email, phone, comment` plus honeypot `company`
 
 Cancel form fields:
 
