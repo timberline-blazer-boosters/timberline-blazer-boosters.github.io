@@ -8,7 +8,7 @@ description: Sign up to volunteer at a Timberline Blazers booster concession sta
 <div class="contact-form-block">
   <div class="contact-form-header">
     <h2>Concession signup</h2>
-    <p id="signup-intro">Pick a night from the events list, or open this page from a Sign up button. You can be a student or an adult. Add a line for each extra person so we have their name. Stations are assigned when you arrive. A night closes when the roster is full.</p>
+    <p id="signup-intro">Pick a night from the events list, or open this page from a Sign up button. You can be a student or an adult. Add a line for each extra person so we have their name. Stations are assigned when you arrive. A night closes when the roster is full. After you join, we email a cancel link to the address you enter.</p>
   </div>
 
   <p id="signup-event-summary" class="concessions-event-summary" hidden></p>
@@ -20,6 +20,7 @@ description: Sign up to volunteer at a Timberline Blazers booster concession sta
   <form id="concessions-signup-form" class="contact-form" action="https://hook.us2.make.com/ulsndk7fia5rei6kt963e2dt82tbem2g" method="POST" hidden>
     <input type="hidden" name="action" value="signup">
     <input type="hidden" name="event_slug" id="signup-event-slug" value="">
+    <input type="hidden" name="event_title" id="signup-event-title" value="">
     <input type="hidden" name="adult_name" id="signup-adult-name" value="">
     <input type="hidden" name="adult" id="signup-adult-flag" value="false">
     <input type="hidden" name="students" id="signup-students" value="0">

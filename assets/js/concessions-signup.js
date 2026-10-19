@@ -103,6 +103,8 @@
 
     if (event) {
       slugInput.value = slug;
+      var titleInput = document.getElementById("signup-event-title");
+      if (titleInput) titleInput.value = event.title || "";
       summary.textContent =
         event.title +
         " — " +
@@ -177,7 +179,6 @@
     var signed = document.getElementById("thanks-signed");
     var cancelled = document.getElementById("thanks-cancelled");
     var cancelLink = document.getElementById("thanks-cancel-link");
-    var mailto = document.getElementById("thanks-mailto");
     if (status === "cancelled") {
       hide(signed);
       show(cancelled);
@@ -190,22 +191,6 @@
       cancelLink.href = cancelUrl;
       cancelLink.textContent = cancelUrl;
       show(thanksCancel);
-      if (mailto) {
-        var storedEmail = "";
-        try {
-          storedEmail = sessionStorage.getItem("concessionsSignupEmail") || "";
-        } catch (err) {}
-        var body =
-          "Keep this link to cancel your concession signup:\n\n" + cancelUrl;
-        mailto.href =
-          "mailto:" +
-          storedEmail +
-          "?subject=" +
-          encodeURIComponent("Concession signup cancel link") +
-          "&body=" +
-          encodeURIComponent(body);
-        show(mailto);
-      }
     }
   }
 })();

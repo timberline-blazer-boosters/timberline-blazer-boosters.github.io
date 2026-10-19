@@ -30,8 +30,8 @@ Events tab / `_data/concessions-events.csv` headers:
 
 - `venue` is `stadium` or `gym` (officer station lists live in `_data/concessions.yml`; do not list stations on the public events table or signup form)
 - `roster_need` is the slot total (stadium `9`, gym `6`). Closed when Signups `people` reach `roster_need`.
-- `roster_filled` / `spots_left` are sheet formulas, not typed. Publish after each signup/cancel so `/events/#concessions` spots left stay current.
-- `date` is `YYYY-MM-DD`; `published` is `true` to show on `/events/#concessions`
+- `roster_filled` / `spots_left` are sheet formulas, not typed. Publish after each signup/cancel so `/concessions-events/` spots left stay current.
+- `date` is `YYYY-MM-DD`; `published` is `true` to show on `/concessions-events/`
 - Volunteers do **not** pick a station at signup. Stations are assigned on arrival. No password on volunteer signup.
 
 Signups tab (private sheet; never commit names or emails):
@@ -45,13 +45,13 @@ Signups tab (private sheet; never commit names or emails):
 
 Signup form fields:
 
-`action, event_slug, adult_name, adult, students, student_names, people, email, phone, comment` plus honeypot `company`
+`action, event_slug, event_title, adult_name, adult, students, student_names, people, email, phone, comment` plus honeypot `company`. `event_title` is for the confirmation email only — do not add it to the Signups sheet.
 
 Cancel form fields:
 
 `action, token` plus honeypot `company`
 
-Webhook: concessions signup hook already in `events-concessions-signup.html`; cancel uses the dedicated cancel hook in `events-concessions-cancel.html`. Do **not** reuse compose, update, or contact endpoints. No password on volunteer signup. Officers add nights on the private Events tab; compose/update keep their own secrets. 302 to `/events/concessions-thanks/` (`?token=` after signup, `?status=cancelled` after cancel) or `/events/concessions-error/`. Reject new signups when the night is closed. Keep `/events/concessions-signup/` and `/events/concessions-cancel/` out of `header_pages`.
+Webhook: concessions signup hook already in `events-concessions-signup.html`; cancel uses the dedicated cancel hook in `events-concessions-cancel.html`. Do **not** reuse compose, update, or contact endpoints. No password on volunteer signup. Officers add nights on the private Events tab; compose/update keep their own secrets. 302 to `/events/concessions-thanks/` (`?token=` after signup, `?status=cancelled` after cancel) or `/events/concessions-error/`. After a successful signup, Make emails the cancel URL from Boosters Gmail to the volunteer `email` (Ignore send errors so the roster row and spots publish still complete). Reject new signups when the night is closed. Keep `/events/concessions-signup/` and `/events/concessions-cancel/` out of `header_pages`. The public list is `/concessions-events/` (`concessions-events.html` in `header_pages`).
 
 ## Compose (`assets/js/compose-crop.js`)
 
