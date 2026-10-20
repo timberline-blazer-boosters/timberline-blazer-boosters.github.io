@@ -105,6 +105,8 @@
       slugInput.value = slug;
       var titleInput = document.getElementById("signup-event-title");
       if (titleInput) titleInput.value = event.title || "";
+      var dateInput = document.getElementById("signup-event-date");
+      if (dateInput) dateInput.value = formatDate(event.date);
       summary.textContent =
         event.title +
         " — " +

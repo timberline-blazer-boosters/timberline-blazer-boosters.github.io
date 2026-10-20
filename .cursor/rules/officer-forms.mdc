@@ -45,7 +45,7 @@ Signups tab (private sheet; never commit names or emails):
 
 Signup form fields:
 
-`action, event_slug, event_title, adult_name, adult, students, student_names, people, email, phone, comment` plus honeypot `company`. `event_title` is for the confirmation email only — do not add it to the Signups sheet.
+`action, event_slug, event_title, event_date, adult_name, adult, students, student_names, people, email, phone, comment` plus honeypot `company`. `event_title` and `event_date` are for the confirmation email only — do not add them to the Signups sheet.
 
 Cancel form fields:
 
