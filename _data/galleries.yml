@@ -37,6 +37,12 @@ groups:
       - slug: football-9
         title: Senior Night
         token: vs4df54dz8
+      - slug: football-10
+        title: C vs Lakes
+        token: 9co8c45bwy
+      - slug: football-11
+        title: JV vs Lakes
+        token: sfhko9ohua
   - slug: volleyball-2627
     title: Volleyball 26-27
     albums:
