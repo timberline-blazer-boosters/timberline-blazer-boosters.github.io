@@ -34,6 +34,9 @@ groups:
       - slug: football-8
         title: V vs River Ridge
         token: nfrpx2fwza
+      - slug: football-9
+        title: Senior Night
+        token: vs4df54dz8
   - slug: volleyball-2627
     title: Volleyball 26-27
     albums:
@@ -88,6 +91,9 @@ groups:
       - slug: soccer-7
         title: V vs Lakes
         token: 8qsy40l3z6
+      - slug: soccer-8
+        title: vs Gig Harbor
+        token: mirrzqt5vl
   - slug: band-and-crowd
     title: Band and Crowd
     albums:
