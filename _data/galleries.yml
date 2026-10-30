@@ -43,6 +43,9 @@ groups:
       - slug: football-11
         title: JV vs Lakes
         token: sfhko9ohua
+      - slug: football-12
+        title: Varsity vs Capital
+        token: rs5rj4h3fl
   - slug: volleyball-2627
     title: Volleyball 26-27
     albums:
@@ -73,6 +76,12 @@ groups:
       - slug: volleyball-9
         title: V vs River Ridge
         token: qng2bq2xt3
+      - slug: volleyball-10
+        title: JV vs North Thurston
+        token: rl93gx69eb
+      - slug: volleyball-11
+        title: V vs North Thurston
+        token: l8lbnzhepd
   - slug: soccer-2627
     title: Soccer 26-27
     albums:
