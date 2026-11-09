@@ -82,6 +82,9 @@ groups:
       - slug: volleyball-11
         title: V vs North Thurston
         token: l8lbnzhepd
+      - slug: volleyball-12
+        title: V vs Peninsula
+        token: nkefudjrw7
   - slug: soccer-2627
     title: Soccer 26-27
     albums:
